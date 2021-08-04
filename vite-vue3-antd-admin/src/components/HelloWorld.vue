@@ -1,5 +1,5 @@
 <template>
-  <h1>{{ msg }}</h1>
+  <h1>{{ handleArray() }}</h1>
 
   <p>
     <a href="https://vitejs.dev/guide/features.html" target="_blank">
@@ -20,6 +20,7 @@
 
 <script setup>
 import { defineProps, reactive } from 'vue'
+import { handleArray } from '../plugin/consts'
 
 defineProps({
   msg: String
