@@ -20,7 +20,7 @@
 
 <script setup>
 import { defineProps, reactive } from 'vue'
-import { handleArray } from '../plugin/consts'
+import { handleArray } from '../../plugin/consts'
 
 defineProps({
   msg: String
