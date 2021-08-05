@@ -4,7 +4,7 @@ import router from './router'
 import Bus from './plugin/bus'
 import store from './store'
 
-import './assets/css/common.css'
+import './assets/css/common.module.css'
 
 const app = createApp(App)
 
