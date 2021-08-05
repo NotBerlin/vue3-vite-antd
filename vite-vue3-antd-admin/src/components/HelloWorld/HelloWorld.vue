@@ -1,4 +1,5 @@
 <template>
+<div id="hello-world">
   <h1>{{ handleArray() }}</h1>
 
   <p>
@@ -17,6 +18,8 @@
     Edit
     <code>components/HelloWorld.vue</code> to test hot module replacement.
   </p>
+</div>
+  
 </template>
 
 <script setup>
@@ -45,5 +48,10 @@ function handlePush() {
 <style scoped>
 a {
   color: #42b983;
+}
+
+#hello-world {
+  height: 100%;
+  width: 100%;
 }
 </style>

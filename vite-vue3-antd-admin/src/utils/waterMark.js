@@ -22,7 +22,7 @@ function watermark (settings) {
     watermark_txt: "text",
     watermark_x: 0, // 水印起始位置x轴坐标
     watermark_y: 20, // 水印起始位置Y轴坐标
-    watermark_rows: 5, // 水印行数
+    watermark_rows: 3, // 水印行数
     watermark_cols: 2, // 水印列数
     watermark_x_space: 40, // 水印x轴间隔
     watermark_y_space: 10, // 水印y轴间隔
