@@ -46,3 +46,11 @@ export function initDate () {
   startTime += '01'
   return { startTime: new Date(startTime), endTime: new Date(endTime.str) }
 }
+
+// Uuid算法
+export function getUuid(join) {
+  let str = 'Uuid-' + join
+  str += parseInt(Math.random() * 6)
+  str += String((new Date()).getTime())
+  return str
+}

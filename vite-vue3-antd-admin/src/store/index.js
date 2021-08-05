@@ -1,6 +1,7 @@
 import { createStore } from "vuex";
 import getters from './getters'
 import createPersistedState from 'vuex-persistedstate'
+import route from "./modules/route";
 
 
 /**
@@ -19,7 +20,7 @@ import createPersistedState from 'vuex-persistedstate'
 const moduleFiles = import.meta.globEager('./modules/*.js')
 console.log(moduleFiles)
 const modules = Object.keys(moduleFiles).reduce((modules, modulePath) => {
-  const storeName = modulePath.replace(/^\.\/(.*)\.\w+$/, '$1')
+  const storeName = modulePath.replace(/^\.\/(.*)\.\w+$/, '$1').replace('modules/', '')
   modules[storeName] = moduleFiles[modulePath].default
   return modules
 }, {})
@@ -30,7 +31,8 @@ export default createStore({
       storage: window.localStorage,
       reducer: (state) => {
         return {
-          user: state.user
+          user: state.user,
+          routes: state.route.routes
         }
       }
     })
