@@ -1,15 +1,23 @@
 <template>
   <div id="home">
-    <left />
-    <right />
+    <el-container style="height: 100%; border: 1px solid #eee">
+      <Aside />
+
+      <Container />
+    </el-container>
   </div>
 </template>
 <script setup>
 import { defineProps, reactive, defineEmits, useAttrs, useSlots } from 'vue'
-import Left from './modules/Left.vue'
-import Right from './modules/Right.vue'
+import Aside from './modules/Aside.vue'
+import Container from './modules/Container.vue'
+import { setWaterMark } from '../../utils/waterMark'
+import { onMounted } from 'vue'
 
-const state = reactive({ count: 0 })
+onMounted(() => {
+  setWaterMark('陈罗林')
+})
+
 </script>
 <style>
 #home {
@@ -18,8 +26,13 @@ const state = reactive({ count: 0 })
   display: flex;
 }
 
-#home > div {
-  flex: 1;
-  height: 100%;
+.el-header {
+  background-color: #b3c0d1;
+  color: #333;
+  line-height: 60px;
+}
+
+.el-aside {
+  color: #333;
 }
 </style>
