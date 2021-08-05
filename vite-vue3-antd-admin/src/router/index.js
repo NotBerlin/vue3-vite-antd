@@ -7,6 +7,11 @@ const routes = [
         name: "HelloWorld",
         component:  () => import('../components/HelloWorld/HelloWorld.vue'),
     },
+    {
+        path: "/home",
+        name: "Home",
+        component: () => import('../components/Home/Home.vue'),
+    },
 ];
 
 // 导出路由
