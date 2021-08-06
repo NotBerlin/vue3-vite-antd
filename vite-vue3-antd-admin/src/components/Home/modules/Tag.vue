@@ -1,6 +1,16 @@
 <template>
   <div id='tag'>
-    <el-tag :key="tag.fullPath" size="medium" v-for="tag in tags" :closable="tag.fullPath !== '/home'" :disable-transitions="false" @close="handleClose(tag)" :checked="currentUrl.fullPath === tag.fullPath" @click="onChange(tag)">
+    <el-tag 
+      :key="tag.fullPath" 
+      size="medium" 
+      v-for="tag in tags" 
+      :closable="tag.fullPath !== '/home'" 
+      :disable-transitions="false" 
+      @close="handleClose(tag)" 
+      :checked="currentUrl.fullPath === tag.fullPath" 
+      @click="onChange(tag)"
+    >
+      <div :class="currentUrl.fullPath === tag.fullPath ? 'tag-style tag-active' : 'tag-style tag-no-active'"></div>
       {{tag.meta.title}}
     </el-tag>
   </div>
@@ -48,5 +58,21 @@ function onChange (tag) {
 
 .el-tag[checked="true"] > .el-tag__close {
   color: white;
+}
+
+.tag-style {
+  display: inline-block;
+  height: 5px;
+  width: 5px;
+  border-radius: 5px;
+  margin-bottom: 1px;
+}
+
+.tag-active {
+  background: #76ff03;
+}
+
+.tag-no-active {
+  background: #bdbdbd;
 }
 </style>
