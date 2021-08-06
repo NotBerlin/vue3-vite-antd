@@ -18,7 +18,6 @@ import route from "./modules/route";
 // 在vite编译过程中nobundle
 // 使用import方法
 const moduleFiles = import.meta.globEager('./modules/*.js')
-console.log(moduleFiles)
 const modules = Object.keys(moduleFiles).reduce((modules, modulePath) => {
   const storeName = modulePath.replace(/^\.\/(.*)\.\w+$/, '$1').replace('modules/', '')
   modules[storeName] = moduleFiles[modulePath].default
@@ -28,11 +27,11 @@ const modules = Object.keys(moduleFiles).reduce((modules, modulePath) => {
 export default createStore({
   plugins: [
     createPersistedState({
-      storage: window.sessionStorage,
+      storage: window.localStorage,
       reducer: (state) => {
         return {
-          userInfo: state.user.userInfo,
-          routes: state.route.routes
+          user: state.user,
+          route: state.route
         }
       }
     })

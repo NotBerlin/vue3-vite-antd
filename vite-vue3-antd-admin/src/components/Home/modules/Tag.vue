@@ -37,7 +37,7 @@ function onChange (tag) {
 }
 
 .el-tag {
-  margin: 6px;
+  margin: 6px 3px;
   cursor: pointer;
 }
 

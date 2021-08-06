@@ -34,6 +34,7 @@ function login () {
     {
       name: '导航1',
       id: getUuid('nav-'),
+      icon: 'daohang.png',
       sections: [
         {
           name: '选项1',
@@ -46,17 +47,23 @@ function login () {
           path: '/nav/section2'
         },
         {
-          name: '选项1',
+          name: '选项3',
           id: getUuid('section-'),
-          path: '/nav1/group1/section1',
+          path: '/nav/section3',
           disable: true
         },
+      ]
+    },
+    {
+      name: 'API',
+      id: getUuid('API-'),
+      icon: 'API.png',
+      sections: [
         {
-          name: '选项2',
-          id: getUuid('section-'),
-          path: '/nav1/group1/section2',
-          disable: true
-        }
+          name: '网易云音乐',
+          id: getUuid('neteaseCloud-'),
+          path: '/API/neteaseCloud'
+        },
       ]
     },
   ]
@@ -99,8 +106,10 @@ onMounted(() => {
   height: 450px;
   width: 320px;
   border-radius: 8px;
-  box-shadow: 0 2px 3px;
   padding: 26px 13px;
+  position: relative;
+  background: hsla(120, 50%, 0%, 0.3);
+  overflow: hidden;
 }
 
 .login-iframe > button {

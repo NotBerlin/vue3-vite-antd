@@ -6,21 +6,25 @@
         <template #dropdown>
           <el-dropdown-menu>
             <el-dropdown-item @click="logout">退出登录</el-dropdown-item>
+            <el-dropdown-item @click="editUserInfo">修改信息</el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
-      <span>{{userInfo.name}}</span>
+      <div class="user-info">
+        <img src="../../../assets/images/portrait.jpeg" alt="" srcset="">
+        {{userInfo.name}}
+      </div>
     </el-header>
   </div>
 </template>
 <script setup>
-import { defineProps, reactive, defineEmits, useAttrs, useSlots } from 'vue'
+import { defineProps, reactive, defineEmits, useAttrs, useSlots, computed } from 'vue'
 import useInstance from '../../../mixins/instance'
 
 const { $store, $router } = useInstance()
-const userInfo = $store.state.userInfo
+const userInfo = computed(() => $store.state.user.userInfo)
 
-function logout() {
+function logout () {
   $store.commit('route/SET_ROUTES', [])
   $store.commit('user/SET_USER', {})
   $router.push({
@@ -28,6 +32,25 @@ function logout() {
   })
 }
 
+function editUserInfo () { }
+
 </script>
 <style>
+.el-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.user-info {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.user-info > img {
+  height: 30px;
+  border-radius: 30px;
+  margin-right: 4px;
+}
 </style>
