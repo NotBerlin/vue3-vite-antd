@@ -2,6 +2,7 @@ const state = {
   /**
    * xxxxx: {}
    */
+  userInfo: {}
 }
 
 const mutations = {
@@ -11,6 +12,9 @@ const mutations = {
    *  state.xxxxx = xxx
    * }
    */
+  SET_USER: (state, userInfo) => {
+    state.userInfo = userInfo
+  }
 }
 
 const actions = {

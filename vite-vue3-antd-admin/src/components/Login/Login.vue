@@ -18,7 +18,7 @@
   </div>
 </template>
 <script setup>
-import { defineProps, reactive, defineEmits, useAttrs, useSlots, toRefs, ref } from 'vue'
+import { defineProps, reactive, defineEmits, useAttrs, useSlots, toRefs, ref, onMounted } from 'vue'
 import useInstance from '../../mixins/instance'
 import { getUuid } from '../../utils/consts'
 
@@ -34,206 +34,50 @@ function login () {
     {
       name: '导航1',
       id: getUuid('nav-'),
-      groups: [
+      sections: [
         {
-          name: '分组1',
-          id: getUuid('group-'),
-          sections: [
-            {
-              name: '选项1',
-              id: getUuid('section-'),
-              path: '/nav1/group1/section1'
-            }
-          ]
+          name: '选项1',
+          id: getUuid('section-'),
+          path: '/nav/section1'
         },
         {
-          name: '分组2',
-          id: getUuid('group-'),
-          sections: [
-            {
-              name: '选项1',
-              id: getUuid('section-'),
-              path: '/nav1/group1/section1'
-            },
-            {
-              name: '选项2',
-              id: getUuid('section-'),
-              path: '/nav1/group1/section2'
-            }
-          ]
+          name: '选项2',
+          id: getUuid('section-'),
+          path: '/nav/section2'
         },
         {
-          name: '分组3',
-          id: getUuid('group-'),
-          sections: [
-            {
-              name: '选项1',
-              id: getUuid('section-'),
-              path: '/nav1/group1/section1'
-            },
-            {
-              name: '选项2',
-              id: getUuid('section-'),
-              path: '/nav1/group1/section2'
-            }
-          ]
+          name: '选项1',
+          id: getUuid('section-'),
+          path: '/nav1/group1/section1',
+          disable: true
+        },
+        {
+          name: '选项2',
+          id: getUuid('section-'),
+          path: '/nav1/group1/section2',
+          disable: true
         }
       ]
     },
-    {
-      name: '导航1',
-      id: getUuid('nav-'),
-      groups: [
-        {
-          name: '分组1',
-          id: getUuid('group-'),
-          sections: [
-            {
-              name: '选项1',
-              id: getUuid('section-'),
-              path: '/nav1/group1/section1'
-            }
-          ]
-        },
-        {
-          name: '分组2',
-          id: getUuid('group-'),
-          sections: [
-            {
-              name: '选项1',
-              id: getUuid('section-'),
-              path: '/nav1/group1/section1'
-            },
-            {
-              name: '选项2',
-              id: getUuid('section-'),
-              path: '/nav1/group1/section2'
-            }
-          ]
-        },
-        {
-          name: '分组3',
-          id: getUuid('group-'),
-          sections: [
-            {
-              name: '选项1',
-              id: getUuid('section-'),
-              path: '/nav1/group1/section1'
-            },
-            {
-              name: '选项2',
-              id: getUuid('section-'),
-              path: '/nav1/group1/section2'
-            }
-          ]
-        }
-      ]
-    },
-    {
-      name: '导航1',
-      id: getUuid('nav-'),
-      groups: [
-        {
-          name: '分组1',
-          id: getUuid('group-'),
-          sections: [
-            {
-              name: '选项1',
-              id: getUuid('section-'),
-              path: '/nav1/group1/section1'
-            }
-          ]
-        },
-        {
-          name: '分组2',
-          id: getUuid('group-'),
-          sections: [
-            {
-              name: '选项1',
-              id: getUuid('section-'),
-              path: '/nav1/group1/section1'
-            },
-            {
-              name: '选项2',
-              id: getUuid('section-'),
-              path: '/nav1/group1/section2'
-            }
-          ]
-        },
-        {
-          name: '分组3',
-          id: getUuid('group-'),
-          sections: [
-            {
-              name: '选项1',
-              id: getUuid('section-'),
-              path: '/nav1/group1/section1'
-            },
-            {
-              name: '选项2',
-              id: getUuid('section-'),
-              path: '/nav1/group1/section2'
-            }
-          ]
-        }
-      ]
-    },
-    {
-      name: '导航1',
-      id: getUuid('nav-'),
-      groups: [
-        {
-          name: '分组1',
-          id: getUuid('group-'),
-          sections: [
-            {
-              name: '选项1',
-              id: getUuid('section-'),
-              path: '/nav1/group1/section1'
-            }
-          ]
-        },
-        {
-          name: '分组2',
-          id: getUuid('group-'),
-          sections: [
-            {
-              name: '选项1',
-              id: getUuid('section-'),
-              path: '/nav1/group1/section1'
-            },
-            {
-              name: '选项2',
-              id: getUuid('section-'),
-              path: '/nav1/group1/section2'
-            }
-          ]
-        },
-        {
-          name: '分组3',
-          id: getUuid('group-'),
-          sections: [
-            {
-              name: '选项1',
-              id: getUuid('section-'),
-              path: '/nav1/group1/section1'
-            },
-            {
-              name: '选项2',
-              id: getUuid('section-'),
-              path: '/nav1/group1/section2'
-            }
-          ]
-        }
-      ]
-    }
   ]
 
+  const userInfo = {
+    name: '陈陈陈',
+    id: '511xxxxxxxxxxxxx14'
+  }
+
   $store.commit('route/SET_ROUTES', arr)
+  $store.commit('user/SET_USER', userInfo)
   $router.push({
     path: '/home'
   })
 }
+
+onMounted(() => {
+  $store.commit('tag/CLEAR_TAGS')
+  $store.commit('route/SET_ROUTES', [])
+  $store.commit('user/SET_USER', {})
+})
 
 </script>
 <style>

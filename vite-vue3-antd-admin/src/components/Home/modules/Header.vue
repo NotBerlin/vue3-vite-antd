@@ -5,20 +5,29 @@
         <i class="el-icon-setting" style="margin-right: 15px"></i>
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item>查看</el-dropdown-item>
-            <el-dropdown-item>新增</el-dropdown-item>
-            <el-dropdown-item>删除</el-dropdown-item>
+            <el-dropdown-item @click="logout">退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
-      <span>王小虎</span>
+      <span>{{userInfo.name}}</span>
     </el-header>
   </div>
 </template>
 <script setup>
 import { defineProps, reactive, defineEmits, useAttrs, useSlots } from 'vue'
+import useInstance from '../../../mixins/instance'
 
-const state = reactive({ count: 0 })
+const { $store, $router } = useInstance()
+const userInfo = $store.state.userInfo
+
+function logout() {
+  $store.commit('route/SET_ROUTES', [])
+  $store.commit('user/SET_USER', {})
+  $router.push({
+    path: '/login'
+  })
+}
+
 </script>
 <style>
 </style>

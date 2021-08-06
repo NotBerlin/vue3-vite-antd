@@ -10,7 +10,6 @@ const state = reactive({ count: 0 })
 </script>
 <style>
 #home-view {
-  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;

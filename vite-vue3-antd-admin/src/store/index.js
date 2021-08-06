@@ -28,10 +28,10 @@ const modules = Object.keys(moduleFiles).reduce((modules, modulePath) => {
 export default createStore({
   plugins: [
     createPersistedState({
-      storage: window.localStorage,
+      storage: window.sessionStorage,
       reducer: (state) => {
         return {
-          user: state.user,
+          userInfo: state.user.userInfo,
           routes: state.route.routes
         }
       }

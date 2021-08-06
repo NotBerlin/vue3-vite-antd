@@ -31,5 +31,6 @@ import Tag from './Tag.vue'
 
 .content {
   background: white;
+  height: calc(100% - 40px);
 }
 </style>
