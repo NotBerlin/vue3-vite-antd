@@ -8,7 +8,7 @@ import { getAllPromise } from './util'
 axios.defaults.headers.post['Content-Type'] = 'application/json;charset=utf-8'
 
 const baseConfig = {
-  baseURL: process.env.BASE_URL || process.env.apiUrl || '',
+  baseURL: import.meta.env.VITE_APP_BASE_URL || '',
   timeout: 60 * 1000,
   withCredentials: false,
   crossDomain: true,

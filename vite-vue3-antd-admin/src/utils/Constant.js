@@ -34,12 +34,3 @@ export const UPLOAD_IMAGE_TYPE = [
 export const UPLOAD_IMAGE_MAX_SIZE = 10
 // 正则表达式：身份证号
 export const REGULAR_EXPRESSION_IDNUMBER = /^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/
-// 腾讯im 音视频
-export const SDK_APP_ID = process.env.VUE_APP_SDK_APP_ID
-// 视频clientID
-export const VIDEO_CLIENT_ID = '19100717375020139551301001'
-// TMC直播地址
-export const TMC_LIVE_ADDRESS = 'https://tmclive.100cbc.com/live/49111_'
-// IM直播bizID
-export const TENCENT_LIVE_BIZ_ID = '49111'
-

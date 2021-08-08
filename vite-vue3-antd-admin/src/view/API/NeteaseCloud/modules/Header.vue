@@ -15,7 +15,7 @@
     <div class="float-bottom">
       <div class="float-bottom-cover">
         <div 
-          class="select-current-item" 
+          :class="selectCurrentIndex === selectIndex ? 'select-current-item select-current-item-active' : 'select-current-item'" 
           v-for="(selectCurrent, selectIndex) in selectCurrentMenu" 
           :key="selectCurrent.label"
           @click="dududud(selectIndex)"
@@ -33,10 +33,10 @@ const selectList = [
     name: '发现音乐',
     path: 'found'
   },
-  {
-    name: '我的音乐',
-    path: 'mine'
-  }
+  // {
+  //   name: '我的音乐',
+  //   path: 'mine'
+  // }
 ]
 
 const selectCurrentMenu = [
@@ -61,20 +61,29 @@ const selectCurrentMenu = [
 ]
 
 let current = ref(0)
+let selectCurrentIndex = ref(0)
 
 function moveCircle () {
   const circle = document.getElementsByClassName('float-circle')[0]
   const currentPath = selectList[current.value].path
   const currentDom = document.getElementById(currentPath)
   const currentInnerTextLength = currentDom.innerText.length * 16 + 40
+  const coverDom = document.getElementsByClassName('float-bottom-cover')[0]
+  const selectFirstDom = document.getElementsByClassName('select-current-item')[0]
+  const selectFirstDomLength = selectFirstDom.innerText.length * 12 + 24
   if (currentDom) {
     circle.style.left = parseInt(currentDom.offsetLeft) - 6 + parseInt(currentInnerTextLength / 2) + 'px'
+    coverDom.style.left = parseInt(currentDom.offsetLeft) + parseInt(currentInnerTextLength / 2) - (selectFirstDomLength / 2) + 'px'
   }
 }
 
 function change(index) {
   current.value = index
   moveCircle()
+}
+
+function dududud(index) {
+  selectCurrentIndex.value = index
 }
 
 onMounted(() => {
@@ -139,16 +148,27 @@ onMounted(() => {
 .float-bottom-cover {
   position: absolute;
   display: flex;
-  font-size: 13px;
+  font-size: 12px;
   align-items: center;
   height: 100%;
 }
 
 .select-current-item {
   margin-left: 25px;
+  padding: 2px 12px;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.select-current-item:hover {
+  background: #9B0909;
 }
 
 .select-current-item:first-child {
   margin: 0;
+}
+
+.select-current-item-active {
+  background: #9B0909;
 }
 </style>
