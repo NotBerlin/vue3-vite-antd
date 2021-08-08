@@ -4,6 +4,7 @@ import store from '../store'
 import { getCookie } from './cookie'
 import { AUTH_TOKEN_FRONT, AUTH_TOKEN_END } from './Constant'
 import { getAllPromise } from './util'
+import { queryString } from './consts'
 
 axios.defaults.headers.post['Content-Type'] = 'application/json;charset=utf-8'
 
@@ -60,6 +61,9 @@ _axios.all = (...requsets) => {
 
 _axios.interceptors.request.use(
   (config) => {
+    if (config.method == 'get') {
+      queryString(config.query)
+    }
     const token = getCookie(AUTH_TOKEN_FRONT)
     config.headers.common[AUTH_TOKEN_END] = token
     return config

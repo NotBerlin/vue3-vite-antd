@@ -1,4 +1,4 @@
-export function YoR (string, number) {
+export function YoR(string, number) {
   let arr = string.split(',')
   let options = []
   arr.forEach(element => {
@@ -10,7 +10,7 @@ export function YoR (string, number) {
   return options
 }
 
-function dateObject2DateString (obj) {
+function dateObject2DateString(obj) {
   let year = obj.getFullYear()
   let month = obj.getMonth() + 1
   let day = obj.getDate()
@@ -26,7 +26,7 @@ function dateObject2DateString (obj) {
   return { str, year, month, day }
 }
 
-export function formmatDate (arr) {
+export function formmatDate(arr) {
   let startTime = dateObject2DateString(arr[0])
   let endTime = dateObject2DateString(arr[1])
   if (startTime.month !== endTime.month) {
@@ -36,7 +36,7 @@ export function formmatDate (arr) {
   return { startTime: startTime.str, endTime: endTime.str }
 }
 
-export function initDate () {
+export function initDate() {
   let endTime = dateObject2DateString(new Date())
   let startTime = endTime.year + '-'
   if (endTime.month < 10) {
@@ -52,5 +52,21 @@ export function getUuid(join) {
   let str = 'Uuid-' + join
   str += parseInt(Math.random() * 6)
   str += String((new Date()).getTime())
+  return str
+}
+
+export function queryString(obj, join = "&", head, tail) {
+  if (obj.constructor.name !== 'Object') {
+    throw('obj is a Object-Format')
+  }
+  if (Object.keys(obj).length === 0) return ''
+  let str = head
+  Object.keys(obj).forEach(key => {
+    if (str !== head) {
+      str += join + key + '=' + config.query[key]
+      return false
+    }
+    str += key + '=' + config.query[key]
+  })
   return str
 }
