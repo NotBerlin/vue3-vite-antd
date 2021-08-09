@@ -90,6 +90,28 @@ function login () {
         },
       ]
     },
+    {
+      name: '数据分析',
+      id: getUuid('DataAnalysis-'),
+      icon: 'data-analysis.png',
+      sections: [
+        {
+          name: 'G2',
+          id: getUuid('G2-'),
+          path: '/dataAnalysis/g2'
+        },
+        {
+          name: 'G6',
+          id: getUuid('G6-'),
+          path: '/dataAnalysis/g6'
+        },
+        {
+          name: 'Echarts',
+          id: getUuid('Echarts-'),
+          path: '/dataAnalysis/echarts'
+        },
+      ]
+    },
   ]
 
   const userInfo = {
