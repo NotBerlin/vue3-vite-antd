@@ -17,17 +17,10 @@ const state = {
 
 const mutations = {
   SET_TAGS: (state, tag) => {
+    if (tag.fullPath === '') return false
     if (tag.fullPath !== '/home') {
-      let index = false
-      state.tags.forEach((item, currentIndex) => {
-        if (item.fullPath === tag.fullPath) {
-          index = currentIndex
-        }
-      })
-      if (index) {
-        state.tags.splice(index, 1)
-      }
-      state.tags.push(tag)
+      let index = state.tags.findIndex((item) => item.fullPath === tag.fullPath)
+      index === -1 ? state.tags.push(tag) : ''
     } else {
       if (!state.tags[0]) {
         state.tags.push(tag)
@@ -49,6 +42,10 @@ const mutations = {
     }
   },
   SET_CURRENT_TAG: (state, tag) => {
+    if (tag.fullPath === '') {
+      state.currentTag = ''
+      return false
+    }
     state.currentTag = tag
   }
 }

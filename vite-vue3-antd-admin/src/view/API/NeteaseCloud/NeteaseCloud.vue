@@ -21,8 +21,8 @@ const { $bus, $route, $router, $store, $_http, $_API } = useInstance();
 
 onMounted(async() => {
   const query = {
-    type: 'song',
-    id: "28012031",
+    type: 'search',
+    id: "1",
   };
   const res = await $_http.get($_API.API_NETEASE_CLOUD_SEARCH, { query });
   debugger

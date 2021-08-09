@@ -1,10 +1,10 @@
 export default [
-    {
-      path: '/ThreeJS/neteaseCloud',
-      name: 'NeteaseCloud',
-      meta: {
-        title: '网易云',
-      },
-      component: () => import('../../view/API/NeteaseCloud/NeteaseCloud.vue'),
-    }
-  ]
+  {
+    path: '/ThreeJS/Cloud',
+    name: 'Cloud',
+    meta: {
+      title: '网易云',
+    },
+    component: () => import('../../view/ThreeJS/Cloud/Cloud.vue'),
+  }
+]

@@ -5,6 +5,7 @@ import { getCookie } from './cookie'
 import { AUTH_TOKEN_FRONT, AUTH_TOKEN_END } from './Constant'
 import { getAllPromise } from './util'
 import { queryString } from './consts'
+import { ElMessage } from 'element-plus'
 
 axios.defaults.headers.post['Content-Type'] = 'application/json;charset=utf-8'
 
@@ -62,7 +63,7 @@ _axios.all = (...requsets) => {
 _axios.interceptors.request.use(
   (config) => {
     if (config.method == 'get') {
-      queryString(config.query)
+      config.url += queryString(config.query, '&', '?')
     }
     const token = getCookie(AUTH_TOKEN_FRONT)
     config.headers.common[AUTH_TOKEN_END] = token
@@ -94,7 +95,7 @@ _axios.interceptors.response.use(
         }
         message = response.data.message || response.data.errorData || '操作执行失败'
       }
-      // ElMessage({ type: 'error', message: message })
+      ElMessage({ type: 'error', message: message })
       return Promise.reject(response)
     }
     return {
@@ -105,25 +106,25 @@ _axios.interceptors.response.use(
   },
   (error) => {
     if (!navigator.onLine) {
-      // ElMessage({ type: 'error', message: '网络连接异常，请检查网络！' })
+      ElMessage({ type: 'error', message: '网络连接异常，请检查网络！' })
       return Promise.reject(error)
     }
     const status = error.response.status
     if (status === 401) {
-      // ElMessage({ type: 'error', message: '您的登录已过期，请重新登录' })
+      ElMessage({ type: 'error', message: '您的登录已过期，请重新登录' })
       window.location.reload()
       store.dispatch('user/logout')
       return Promise.reject(error)
     }
     if (status < 200) {
-      // ElMessage({ type: 'warning', message: `未处理的消息响应，状态码：${ status }` })
+      ElMessage({ type: 'warning', message: `未处理的消息响应，状态码：${ status }` })
     } else if (status >= 300 && status < 400) {
-      // ElMessage({ type: 'warning', message: `未处理的重定向响应，状态码：${ status }` })
+      ElMessage({ type: 'warning', message: `未处理的重定向响应，状态码：${ status }` })
     } else if (status >= 400 && status < 500) {
       console.log(this)
-      // ElMessage({ type: 'error', message: `客户端错误，状态码：${ status }` })
+      ElMessage({ type: 'error', message: `客户端错误，状态码：${ status }` })
     } else if (status >= 500) {
-      // ElMessage({ type: 'error', message: `服务器错误，状态码：${ status }` })
+      ElMessage({ type: 'error', message: `服务器错误，状态码：${ status }` })
     }
     // 系统请求失败
     return Promise.reject(error)

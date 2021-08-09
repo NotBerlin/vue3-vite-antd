@@ -66,6 +66,30 @@ function login () {
         },
       ]
     },
+    {
+      name: 'ThreeJS',
+      id: getUuid('ThreeJS-'),
+      icon: '3D.png',
+      sections: [
+        {
+          name: '风',
+          id: getUuid('Cloud-'),
+          path: '/ThreeJS/Cloud'
+        },
+      ]
+    },
+    {
+      name: '地图',
+      id: getUuid('Map-'),
+      icon: 'ditu.png',
+      sections: [
+        {
+          name: '地图',
+          id: getUuid('Map-'),
+          path: '/Map/Map'
+        },
+      ]
+    },
   ]
 
   const userInfo = {

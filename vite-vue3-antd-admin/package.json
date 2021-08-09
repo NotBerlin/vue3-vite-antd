@@ -10,6 +10,7 @@
     "axios": "^0.21.1",
     "element-plus": "^1.0.2-beta.69",
     "js-cookie": "^3.0.0",
+    "three": "^0.131.3",
     "vue": "^3.0.5",
     "vue-router": "^4.0.10",
     "vuex": "^4.0.2",

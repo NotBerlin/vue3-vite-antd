@@ -13,12 +13,13 @@ Object.keys(commonFiles).forEach((commonFile, commonIndex) => {
 // 添加到/路径下
 // /路径下的对象
 const rootPathObject = routes.find(item => item.path === '/')
-
 // 菜单路由
 const moduleFiles = import.meta.globEager('./modules/*.js');
 Object.keys(moduleFiles).forEach((moduleFile, moduleIndex) => {
     rootPathObject.children.push(...moduleFiles[moduleFile].default)
 });
+
+console.log(rootPathObject)
 
 // 导出路由
 const router = createRouter({
@@ -45,9 +46,13 @@ router.beforeEach((to, from, next) => {
         next()
         return false
     }
-    document.title = to.meta.title
-    store.commit('tag/SET_TAGS', to)
-    store.commit('tag/SET_CURRENT_TAG', to)
+    if (!to.meta.title) {
+        document.title = '王的网站'
+    } else {
+        document.title = to.meta.title
+        store.commit('tag/SET_TAGS', to)
+        store.commit('tag/SET_CURRENT_TAG', to)
+    }
     next()
 })
 

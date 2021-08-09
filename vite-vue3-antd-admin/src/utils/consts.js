@@ -55,7 +55,7 @@ export function getUuid(join) {
   return str
 }
 
-export function queryString(obj, join = "&", head, tail) {
+export function queryString(obj, join = "&", head = '', tail = '') {
   if (obj.constructor.name !== 'Object') {
     throw('obj is a Object-Format')
   }
@@ -63,10 +63,10 @@ export function queryString(obj, join = "&", head, tail) {
   let str = head
   Object.keys(obj).forEach(key => {
     if (str !== head) {
-      str += join + key + '=' + config.query[key]
+      str += join + key + '=' + obj[key]
       return false
     }
-    str += key + '=' + config.query[key]
+    str += key + '=' + obj[key]
   })
   return str
 }
