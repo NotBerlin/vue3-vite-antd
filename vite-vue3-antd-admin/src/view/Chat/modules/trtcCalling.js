@@ -5,6 +5,7 @@ export default class TrtcClient {
     this.trtcCalling = null;
     this.userID = ''
     this.userSig = ''
+    this.remoteUserID = ''
     this.createClient(options.SDKAppID);
   }
   createClient (SDKAppID) {
@@ -22,7 +23,7 @@ export default class TrtcClient {
     let promise = this.trtcCalling.login({ userID: options.userID, userSig: options.userSig });
     promise.then(() => {
       //success
-      debugger
+      console.log('TRTCCALLING 登录成功')
     }).catch(error => {
       console.warn('login error:', error)
     });
@@ -31,50 +32,57 @@ export default class TrtcClient {
     let promise = this.trtcCalling.logout();
     promise.then(() => {
       //success
+      console.log('TRTCCALLING 登出成功')
     }).catch(error => {
       console.warn('logout error:', error)
     });
   }
   call (options) {
+    this.remoteUserID = options.userID
     let promise = this.trtcCalling.call({ userID: options.userID, type: 1, timeout: 0 });
     promise.then(() => {
       //success
+      console.log('拨打了' + options.userID + '电话')
     }).catch(error => {
       console.warn('call error:', error)
     });
   }
-  groupCall () {
-    let promise = this.trtcCalling.groupCall({ userIDList: ['user1', 'user2'], type: 1, groupID: '群组 ID' });
+  groupCall (options) {
+    let promise = this.trtcCalling.groupCall({ userIDList: options.userIDList, type: 1, groupID: '群组 ID' });
     promise.then(() => {
       //success
+      console.log('拨打了' + options.userIDList + '群组电话')
     }).catch(error => {
       console.warn('groupCall error:', error)
     });
   }
   hangup () {
+    console.log('取消电话/挂断电话')
     this.trtcCalling.hangup();
   }
   startRemoteView () {
-    let promise = this.trtcCalling.startRemoteView({ userID: 'user1', videoViewDomID: 'video_1' });
+    let promise = this.trtcCalling.startRemoteView({ userID: this.remoteUserID, videoViewDomID: 'remote_video' });
     promise.then(() => {
       //success
+      console.log('打开远程视频成功')
     }).catch(error => {
       console.warn('startRemoteView error:', error)
     });
   }
   stopRemoteView () {
-    this.trtcCalling.stopRemoteView({ userID: 'user1', videoViewDomID: 'video_1' });
+    this.trtcCalling.stopRemoteView({ userID: this.remoteUserID, videoViewDomID: 'remote_video' });
   }
   startLocalView () {
-    let promise = this.trtcCalling.startLocalView({ userID: 'user1', videoViewDomID: 'video_1' });
+    let promise = this.trtcCalling.startLocalView({ userID: this.userID, videoViewDomID: 'local_video' });
     promise.then(() => {
       //success
+      console.log('打开本地视频成功')
     }).catch(error => {
       console.warn('startLocalView error:', error)
     });
   }
   stopLocalView () {
-    this.trtcCalling.stopLocalView({ userID: 'user1', videoViewDomID: 'video_1' });
+    this.trtcCalling.stopLocalView({ userID: this.userID, videoViewDomID: 'local_video' });
   }
   openCamera () {
     this.trtcCalling.openCamera();
