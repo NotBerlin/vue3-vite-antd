@@ -1,4 +1,5 @@
 import TRTCCalling from 'trtc-calling-js';
+import eventEmitter from '../../../plugin/bus'
 
 export default class TrtcClient {
   constructor(options) {
@@ -43,6 +44,7 @@ export default class TrtcClient {
     promise.then(() => {
       //success
       console.log('拨打了' + options.userID + '电话')
+      eventEmitter.emit('call-success')
     }).catch(error => {
       console.warn('call error:', error)
     });
