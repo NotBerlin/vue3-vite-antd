@@ -18,7 +18,6 @@ const moduleFiles = import.meta.globEager('./modules/*.js');
 Object.keys(moduleFiles).forEach((moduleFile, moduleIndex) => {
     rootPathObject.children.push(...moduleFiles[moduleFile].default)
 });
-
 console.log(rootPathObject)
 
 // 导出路由

@@ -112,6 +112,18 @@ function login () {
         },
       ]
     },
+    {
+      name: '实时通信',
+      id: getUuid('RealTimeCommunication-'),
+      icon: 'chat.png',
+      sections: [
+        {
+          name: 'TrtcCalling',
+          id: getUuid('TrtcCalling-'),
+          path: '/Chat/trtcCalling'
+        },
+      ]
+    },
   ]
 
   const userInfo = {
