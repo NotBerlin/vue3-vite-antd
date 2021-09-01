@@ -7,6 +7,8 @@ export default class TrtcClient {
     this.userID = ''
     this.userSig = ''
     this.remoteUserID = ''
+    this.isStartLocalView = false
+    this.isStartRemoteView = false
     this.createClient(options.SDKAppID);
   }
   createClient (SDKAppID) {
@@ -15,10 +17,10 @@ export default class TrtcClient {
     };
     this.trtcCalling = new TRTCCalling(options);
     this.trtcCalling.setLogLevel(0);
-    this.handleEvent()
+    this.handleEventClient()
     return this.trtcCalling;
   }
-  login (options) {
+  loginClient (options) {
     this.userID = options.userID
     this.userSig = options.userSig
     let promise = this.trtcCalling.login({ userID: options.userID, userSig: options.userSig });
@@ -29,7 +31,7 @@ export default class TrtcClient {
       console.warn('login error:', error)
     });
   }
-  logout () {
+  logoutClient () {
     let promise = this.trtcCalling.logout();
     promise.then(() => {
       //success
@@ -38,7 +40,7 @@ export default class TrtcClient {
       console.warn('logout error:', error)
     });
   }
-  call (options) {
+  callClient (options) {
     this.remoteUserID = options.userID
     let promise = this.trtcCalling.call({ userID: options.userID, type: 1, timeout: 0 });
     promise.then(() => {
@@ -49,7 +51,7 @@ export default class TrtcClient {
       console.warn('call error:', error)
     });
   }
-  groupCall (options) {
+  groupCallClient (options) {
     let promise = this.trtcCalling.groupCall({ userIDList: options.userIDList, type: 1, groupID: '群组 ID' });
     promise.then(() => {
       //success
@@ -58,11 +60,21 @@ export default class TrtcClient {
       console.warn('groupCall error:', error)
     });
   }
-  hangup () {
+  acceptClient ({ inviteID, sponsor, inviteData }) {
+    let promise = this.trtcCalling.accept({ inviteID: inviteID, roomID: inviteData.roomID, callType: inviteData.callType });
+    promise.then(() => {
+      //success
+      this.startRemoteViewClient.apply(this)
+      this.startLocalViewClient.apply(this)
+    }).catch(error => {
+      console.warn('accept error:', error);
+    });
+  }
+  hangupClient () {
     console.log('取消电话/挂断电话')
     this.trtcCalling.hangup();
   }
-  startRemoteView () {
+  startRemoteViewClient () {
     let promise = this.trtcCalling.startRemoteView({ userID: this.remoteUserID, videoViewDomID: 'remote_video' });
     promise.then(() => {
       //success
@@ -71,10 +83,10 @@ export default class TrtcClient {
       console.warn('startRemoteView error:', error)
     });
   }
-  stopRemoteView () {
+  stopRemoteViewClient () {
     this.trtcCalling.stopRemoteView({ userID: this.remoteUserID, videoViewDomID: 'remote_video' });
   }
-  startLocalView () {
+  startLocalViewClient () {
     let promise = this.trtcCalling.startLocalView({ userID: this.userID, videoViewDomID: 'local_video' });
     promise.then(() => {
       //success
@@ -83,57 +95,64 @@ export default class TrtcClient {
       console.warn('startLocalView error:', error)
     });
   }
-  stopLocalView () {
+  stopLocalViewClient () {
     this.trtcCalling.stopLocalView({ userID: this.userID, videoViewDomID: 'local_video' });
   }
-  openCamera () {
+  openCameraClient () {
     this.trtcCalling.openCamera();
   }
-  closeCamera () {
+  closeCameraClient () {
     this.trtcCalling.closeCamera();
   }
-  setMicMute (isMute) {
+  setMicMuteClient (isMute) {
     this.trtcCalling.setMicMute(true) // 开启麦克风
   }
-  onError () { }
-  onInvited () { }
-  onUserEnter () { }
-  onUserLeave () { }
-  onReject () { }
-  onInviteeLineBusy () { }
-  onCallingCancel () { }
-  onKickedOut () { }
-  onCallingTimeout () { }
-  onNoResp () { }
-  onCallingEnd () { }
-  onUserVideoAvailable () { }
-  onUserAudioAvailable () { }
-  handleEvent () {
+  onErrorClient () { }
+  onInvitedClient ({ inviteID, sponsor, inviteData }) {
+    eventEmitter.emit('accept-success')
+    this.remoteUserID = sponsor
+    this.acceptClient({ inviteID, sponsor, inviteData })
+  }
+  onUserEnterClient () {
+    this.startRemoteViewClient.apply(this)
+    this.startLocalViewClient.apply(this)
+  }
+  onUserLeaveClient () { }
+  onRejectClient () { }
+  onInviteeLineBusyClient () { }
+  onCallingCancelClient () { }
+  onKickedOutClient () { }
+  onCallingTimeoutClient () { }
+  onNoRespClient () { }
+  onCallingEndClient () { }
+  onUserVideoAvailableClient () { }
+  onUserAudioAvailableClient () { }
+  handleEventClient () {
     // sdk内部发生了错误
-    this.trtcCalling.on(TRTCCalling.EVENT.ERROR, this.onError)
+    this.trtcCalling.on(TRTCCalling.EVENT.ERROR, this.onErrorClient)
     // 被邀请进行通话
-    this.trtcCalling.on(TRTCCalling.EVENT.INVITED, this.onInvited)
+    this.trtcCalling.on(TRTCCalling.EVENT.INVITED, this.onInvitedClient, this)
     // 远端用户同意进入通话
-    this.trtcCalling.on(TRTCCalling.EVENT.USER_ENTER, this.onUserEnter)
+    this.trtcCalling.on(TRTCCalling.EVENT.USER_ENTER, this.onUserEnterClient, this)
     // 远端用户离开通话
-    this.trtcCalling.on(TRTCCalling.EVENT.USER_LEAVE, this.onUserLeave)
+    this.trtcCalling.on(TRTCCalling.EVENT.USER_LEAVE, this.onUserLeaveClient)
     // 被邀请方拒绝通话
-    this.trtcCalling.on(TRTCCalling.EVENT.REJECT, this.onReject)
+    this.trtcCalling.on(TRTCCalling.EVENT.REJECT, this.onRejectClient)
     // 被邀请方忙线
-    this.trtcCalling.on(TRTCCalling.EVENT.LINE_BUSY, this.onInviteeLineBusy)
+    this.trtcCalling.on(TRTCCalling.EVENT.LINE_BUSY, this.onInviteeLineBusyClient)
     // 邀请方取消了通话邀请，作为被邀请方会收到
-    this.trtcCalling.on(TRTCCalling.EVENT.CALLING_CANCEL, this.onCallingCancel)
+    this.trtcCalling.on(TRTCCalling.EVENT.CALLING_CANCEL, this.onCallingCancelClient)
     // 因为多实例登录或者多终端登录被被踢出im系统
-    this.trtcCalling.on(TRTCCalling.EVENT.KICKED_OUT, this.onKickedOut)
+    this.trtcCalling.on(TRTCCalling.EVENT.KICKED_OUT, this.onKickedOutClient)
     // 超时
-    this.trtcCalling.on(TRTCCalling.EVENT.CALLING_TIMEOUT, this.onCallingTimeout)
+    this.trtcCalling.on(TRTCCalling.EVENT.CALLING_TIMEOUT, this.onCallingTimeoutClient)
     // 邀请后对端无应答
-    this.trtcCalling.on(TRTCCalling.EVENT.NO_RESP, this.onNoResp)
+    this.trtcCalling.on(TRTCCalling.EVENT.NO_RESP, this.onNoRespClient)
     // 本次通话结束了
-    this.trtcCalling.on(TRTCCalling.EVENT.CALLING_END, this.onCallingEnd)
+    this.trtcCalling.on(TRTCCalling.EVENT.CALLING_END, this.onCallingEndClient)
     // 远端用户开启/关闭了摄像头
-    this.trtcCalling.on(TRTCCalling.EVENT.USER_VIDEO_AVAILABLE, this.onUserVideoAvailable)
+    this.trtcCalling.on(TRTCCalling.EVENT.USER_VIDEO_AVAILABLE, this.onUserVideoAvailableClient)
     // 远端用户开启/关闭了麦克风
-    this.trtcCalling.on(TRTCCalling.EVENT.USER_AUDIO_AVAILABLE, this.onUserAudioAvailable)
+    this.trtcCalling.on(TRTCCalling.EVENT.USER_AUDIO_AVAILABLE, this.onUserAudioAvailableClient)
   }
 }
