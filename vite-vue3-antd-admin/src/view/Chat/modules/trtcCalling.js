@@ -27,6 +27,7 @@ export default class TrtcClient {
     promise.then(() => {
       //success
       console.log('TRTCCALLING 登录成功')
+      eventEmitter.emit('login-success')
     }).catch(error => {
       console.warn('login error:', error)
     });
@@ -47,6 +48,8 @@ export default class TrtcClient {
       //success
       console.log('拨打了' + options.userID + '电话')
       eventEmitter.emit('call-success')
+      this.openCameraClient.apply(this)
+      this.startLocalViewClient.apply(this)
     }).catch(error => {
       console.warn('call error:', error)
     });
@@ -63,21 +66,8 @@ export default class TrtcClient {
   acceptClient ({ inviteID, sponsor, inviteData }) {
     let promise = this.trtcCalling.accept({ inviteID: inviteID, roomID: inviteData.roomID, callType: inviteData.callType });
     promise.then(() => {
-      //success
-      let promiseL = this.trtcCalling.startLocalView({ userID: this.userID, videoViewDomID: 'local_video' });
-      promiseL.then(() => {
-        //success
-        console.log('打开本地视频成功')
-      }).catch(error => {
-        console.warn('startLocalView error:', error)
-      });
-      let promiseR = this.trtcCalling.startRemoteView({ userID: this.remoteUserID, videoViewDomID: 'remote_video' });
-      promiseR.then(() => {
-        //success
-        console.log('打开远程视频成功')
-      }).catch(error => {
-        console.warn('startRemoteView error:', error)
-      });
+      this.openCameraClient.apply(this)
+      this.startLocalViewClient.apply(this)
     }).catch(error => {
       console.warn('accept error:', error);
     });
@@ -126,20 +116,7 @@ export default class TrtcClient {
     this.acceptClient({ inviteID, sponsor, inviteData })
   }
   onUserEnterClient () {
-    let promiseL = this.trtcCalling.startLocalView({ userID: this.userID, videoViewDomID: 'local_video' });
-    promiseL.then(() => {
-      //success
-      console.log('打开本地视频成功')
-    }).catch(error => {
-      console.warn('startLocalView error:', error)
-    });
-    let promiseR = this.trtcCalling.startRemoteView({ userID: this.remoteUserID, videoViewDomID: 'remote_video' });
-    promiseR.then(() => {
-      //success
-      console.log('打开远程视频成功')
-    }).catch(error => {
-      console.warn('startRemoteView error:', error)
-    });
+    this.startRemoteViewClient()
   }
   onUserLeaveClient () { }
   onRejectClient () { }
@@ -155,46 +132,9 @@ export default class TrtcClient {
     // sdk内部发生了错误
     this.trtcCalling.on(TRTCCalling.EVENT.ERROR, this.onErrorClient)
     // 被邀请进行通话
-    this.trtcCalling.on(TRTCCalling.EVENT.INVITED, ({ inviteID, sponsor, inviteData }) => {
-      this.remoteUserID = sponsor
-      let promise = this.trtcCalling.accept({ inviteID: inviteID, roomID: inviteData.roomID, callType: inviteData.callType });
-      promise.then(() => {
-        //success
-        let promiseL = this.trtcCalling.startLocalView({ userID: this.userID, videoViewDomID: 'local_video' });
-        promiseL.then(() => {
-          //success
-          console.log('打开本地视频成功')
-        }).catch(error => {
-          console.warn('startLocalView error:', error)
-        });
-        let promiseR = this.trtcCalling.startRemoteView({ userID: this.remoteUserID, videoViewDomID: 'remote_video' });
-        promiseR.then(() => {
-          //success
-          console.log('打开远程视频成功')
-        }).catch(error => {
-          console.warn('startRemoteView error:', error)
-        });
-      }).catch(error => {
-        console.warn('accept error:', error);
-      });
-    })
+    this.trtcCalling.on(TRTCCalling.EVENT.INVITED, this.onInvitedClient, this)
     // 远端用户同意进入通话
-    this.trtcCalling.on(TRTCCalling.EVENT.USER_ENTER, () => {
-      let promiseL = this.trtcCalling.startLocalView({ userID: this.userID, videoViewDomID: 'local_video' });
-      promiseL.then(() => {
-        //success
-        console.log('打开本地视频成功')
-      }).catch(error => {
-        console.warn('startLocalView error:', error)
-      });
-      let promiseR = this.trtcCalling.startRemoteView({ userID: this.remoteUserID, videoViewDomID: 'remote_video' });
-      promiseR.then(() => {
-        //success
-        console.log('打开远程视频成功')
-      }).catch(error => {
-        console.warn('startRemoteView error:', error)
-      });
-    })
+    this.trtcCalling.on(TRTCCalling.EVENT.USER_ENTER, this.onUserEnterClient, this)
     // 远端用户离开通话
     this.trtcCalling.on(TRTCCalling.EVENT.USER_LEAVE, this.onUserLeaveClient)
     // 被邀请方拒绝通话
