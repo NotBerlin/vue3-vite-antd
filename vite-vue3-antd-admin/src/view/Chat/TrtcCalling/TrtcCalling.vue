@@ -29,10 +29,9 @@ const state = reactive({
 });
 
 let trtcclient = null;
-// let trtcclient = null;
 
 function call (options) {
-  trtcclient.callClient({ userID: "user0" });
+  trtcclient.callClient({ userID: state.remoteUserID });
 }
 function login () {
   trtcclient.loginClient({
@@ -54,12 +53,22 @@ function loginSuccess () {
   state.login = true
 }
 
+function leave () {
+  state.show = false;
+}
+
+function reject () {
+  state.show = false;
+}
+
 onMounted(() => {
   trtcclient = new trtcCalling({ SDKAppID: 1400537412 });
   // new trtcCalling({ SDKAppID: import.meta.env.VUE_APP_SDKAPPID })
   eventEmitter.on("call-success", callSuccess);
   eventEmitter.on("accept-success", acceptSuccess);
   eventEmitter.on("login-success", loginSuccess);
+  eventEmitter.on("leave", leave);
+  eventEmitter.on("reject", reject);
 });
 
 onBeforeUnmount(() => {

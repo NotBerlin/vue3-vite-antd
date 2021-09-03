@@ -4,6 +4,7 @@ import eventEmitter from '../../../plugin/bus'
 export default class TrtcClient {
   constructor(options) {
     this.trtcCalling = null;
+    this.tim = null;
     this.userID = ''
     this.userSig = ''
     this.remoteUserID = ''
@@ -16,8 +17,10 @@ export default class TrtcClient {
       SDKAppID // 接入时需要将0替换为您的云通信应用的 SDKAppID
     };
     this.trtcCalling = new TRTCCalling(options);
+    this.tim = this.trtcCalling._timClient._tim
     this.trtcCalling.setLogLevel(0);
-    this.handleEventClient()
+    this.handleEventTRTCCALLINGClient()
+    this.handleEventTIMClient()
     return this.trtcCalling;
   }
   loginClient (options) {
@@ -43,7 +46,7 @@ export default class TrtcClient {
   }
   callClient (options) {
     this.remoteUserID = options.userID
-    let promise = this.trtcCalling.call({ userID: options.userID, type: 1, timeout: 0 });
+    let promise = this.trtcCalling.call({ userID: options.userID, type: 2, timeout: 0 });
     promise.then(() => {
       //success
       console.log('拨打了' + options.userID + '电话')
@@ -66,6 +69,7 @@ export default class TrtcClient {
   acceptClient ({ inviteID, sponsor, inviteData }) {
     let promise = this.trtcCalling.accept({ inviteID: inviteID, roomID: inviteData.roomID, callType: inviteData.callType });
     promise.then(() => {
+      eventEmitter.emit('accept-success')
       this.openCameraClient.apply(this)
       this.startLocalViewClient.apply(this)
     }).catch(error => {
@@ -111,15 +115,20 @@ export default class TrtcClient {
   }
   onErrorClient () { }
   onInvitedClient ({ inviteID, sponsor, inviteData }) {
-    eventEmitter.emit('accept-success')
     this.remoteUserID = sponsor
     this.acceptClient({ inviteID, sponsor, inviteData })
   }
   onUserEnterClient () {
     this.startRemoteViewClient()
   }
-  onUserLeaveClient () { }
-  onRejectClient () { }
+  onUserLeaveClient () {
+    eventEmitter.emit('leave')
+    this.stopLocalViewClient()
+    this.stopRemoteViewClient()
+  }
+  onRejectClient () {
+    eventEmitter.emit('reject')
+  }
   onInviteeLineBusyClient () { }
   onCallingCancelClient () { }
   onKickedOutClient () { }
@@ -128,7 +137,7 @@ export default class TrtcClient {
   onCallingEndClient () { }
   onUserVideoAvailableClient () { }
   onUserAudioAvailableClient () { }
-  handleEventClient () {
+  handleEventTRTCCALLINGClient () {
     // sdk内部发生了错误
     this.trtcCalling.on(TRTCCalling.EVENT.ERROR, this.onErrorClient)
     // 被邀请进行通话
@@ -136,9 +145,9 @@ export default class TrtcClient {
     // 远端用户同意进入通话
     this.trtcCalling.on(TRTCCalling.EVENT.USER_ENTER, this.onUserEnterClient, this)
     // 远端用户离开通话
-    this.trtcCalling.on(TRTCCalling.EVENT.USER_LEAVE, this.onUserLeaveClient)
+    this.trtcCalling.on(TRTCCalling.EVENT.USER_LEAVE, this.onUserLeaveClient, this)
     // 被邀请方拒绝通话
-    this.trtcCalling.on(TRTCCalling.EVENT.REJECT, this.onRejectClient)
+    this.trtcCalling.on(TRTCCalling.EVENT.REJECT, this.onRejectClient, this)
     // 被邀请方忙线
     this.trtcCalling.on(TRTCCalling.EVENT.LINE_BUSY, this.onInviteeLineBusyClient)
     // 邀请方取消了通话邀请，作为被邀请方会收到
@@ -156,4 +165,5 @@ export default class TrtcClient {
     // 远端用户开启/关闭了麦克风
     this.trtcCalling.on(TRTCCalling.EVENT.USER_AUDIO_AVAILABLE, this.onUserAudioAvailableClient)
   }
+  handleEventTIMClient () { }
 }
