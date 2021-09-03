@@ -63,6 +63,7 @@ _axios.all = (...requsets) => {
 _axios.interceptors.request.use(
   (config) => {
     if (config.method == 'get') {
+      if (!config.query) config.query = {}
       config.url += queryString(config.query, '&', '?')
     }
     const token = getCookie(AUTH_TOKEN_FRONT)
@@ -105,6 +106,7 @@ _axios.interceptors.response.use(
     }
   },
   (error) => {
+    debugger
     if (!navigator.onLine) {
       ElMessage({ type: 'error', message: '网络连接异常，请检查网络！' })
       return Promise.reject(error)

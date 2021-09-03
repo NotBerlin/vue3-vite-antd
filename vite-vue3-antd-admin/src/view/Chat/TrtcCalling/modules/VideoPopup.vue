@@ -15,7 +15,15 @@ import {
   onMounted,
 } from "vue";
 
-onMounted(() => {
+function trtcCallingListener () {
+  eventEmitter.on("call-success", callSuccess);
+  eventEmitter.on("accept-success", acceptSuccess);
+  eventEmitter.on("login-success", loginSuccess);
+  eventEmitter.on("leave", leave);
+  eventEmitter.on("reject", reject);
+}
+
+function dragEvent () {
   let box = document.getElementById("local_video");
   box.onmousedown = function (e) {
     var e = e || window.event; //兼容ie浏览器
@@ -48,6 +56,11 @@ onMounted(() => {
       };
     };
   };
+}
+
+onMounted(() => {
+  trtcCallingListener()
+  dragEvent()
 });
 </script>
 <style scoped>

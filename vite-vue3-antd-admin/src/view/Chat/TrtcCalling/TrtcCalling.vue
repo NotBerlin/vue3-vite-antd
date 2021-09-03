@@ -64,11 +64,6 @@ function reject () {
 onMounted(() => {
   trtcclient = new trtcCalling({ SDKAppID: 1400537412 });
   // new trtcCalling({ SDKAppID: import.meta.env.VUE_APP_SDKAPPID })
-  eventEmitter.on("call-success", callSuccess);
-  eventEmitter.on("accept-success", acceptSuccess);
-  eventEmitter.on("login-success", loginSuccess);
-  eventEmitter.on("leave", leave);
-  eventEmitter.on("reject", reject);
 });
 
 onBeforeUnmount(() => {

@@ -64,6 +64,11 @@ function login () {
           id: getUuid('neteaseCloud-'),
           path: '/API/neteaseCloud'
         },
+        {
+          name: 'JAVA本地测试接口',
+          id: getUuid('javaTest-'),
+          path: '/API/javaTest'
+        },
       ]
     },
     {

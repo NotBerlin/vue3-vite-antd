@@ -56,7 +56,7 @@ export function getUuid(join) {
 }
 
 export function queryString(obj, join = "&", head = '', tail = '') {
-  if (obj.constructor.name !== 'Object') {
+  if (!obj || obj.constructor.name !== 'Object') {
     throw('obj is a Object-Format')
   }
   if (Object.keys(obj).length === 0) return ''
