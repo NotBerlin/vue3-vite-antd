@@ -39,3 +39,39 @@ let trtcCalling = new TRTCCalling(options);
   userSig: 'eJw1zF0LgjAUxvHvsttCjptnkdBtBHVjilR3kts6jHLMl6zou2dal8-vgf*LZbs06JRnMeMBsPm4qVS3hjSN3NbK-4*6tIVzVLI4jABQLKKQT4-qHXk1OCJyAJi0oevXpIAIpFzir0Jm6GYPs34mW5ue70ff5Vbwvt2fVHHY6EaLBK295J1OKjOrVuz9AT1VMqM_'
 }
 ```
+
+### VideoPopup
+```js
+// 使用trtcCalling的时候，配合使用eventEmitter
+// 接受参数
+defineProps({
+  show: {
+    type: Boolean,
+    default: false
+  }
+})
+// 组件事件
+defineEmits(['join', 'leave'])
+// 事件调用emit
+function acceptSuccess (e) {
+  emit('update:show', true)
+  emit('join', {
+    type: 'accept',
+    msg: '接受视频邀请',
+    data: {}
+  })
+}
+
+function leave () {
+  emit('update:show', false)
+  emit('leave', {
+    type: 'leave',
+    msg: '离开视频房间',
+    data: {}
+  })
+}
+
+function reject () {
+  state.show = false;
+}
+```

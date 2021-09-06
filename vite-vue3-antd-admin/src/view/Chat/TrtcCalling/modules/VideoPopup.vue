@@ -1,5 +1,5 @@
 <template>
-  <div id="video-popup">
+  <div id="video-popup" v-show="show">
     <div class="remote-video" id="remote_video"></div>
     <div class="local-video" id="local_video"></div>
   </div>
@@ -13,14 +13,40 @@ import {
   useSlots,
   ref,
   onMounted,
+  defineExpose,
+  toRefs
 } from "vue";
+import eventEmitter from "../../../../plugin/bus";
 
-function trtcCallingListener () {
-  eventEmitter.on("call-success", callSuccess);
-  eventEmitter.on("accept-success", acceptSuccess);
-  eventEmitter.on("login-success", loginSuccess);
-  eventEmitter.on("leave", leave);
-  eventEmitter.on("reject", reject);
+const emit = defineEmits(['join', 'leave'])
+const state = reactive({})
+const prop = defineProps({
+  show: {
+    type: Boolean,
+    default: false
+  }
+})
+
+function acceptSuccess (e) {
+  emit('update:show', true)
+  emit('join', {
+    type: 'accept',
+    msg: '接受视频邀请',
+    data: {}
+  })
+}
+
+function leave () {
+  emit('update:show', false)
+  emit('leave', {
+    type: 'leave',
+    msg: '离开视频房间',
+    data: {}
+  })
+}
+
+function reject () {
+  state.show = false;
 }
 
 function dragEvent () {
@@ -58,10 +84,20 @@ function dragEvent () {
   };
 }
 
+function trtcCallingListener () {
+  eventEmitter.on("accept-success", acceptSuccess);
+  eventEmitter.on("leave", leave);
+  eventEmitter.on("reject", reject);
+}
+
 onMounted(() => {
   trtcCallingListener()
   dragEvent()
 });
+
+defineExpose(
+  { ...toRefs(state), ...toRefs(prop) }
+)
 </script>
 <style scoped>
 #video-popup {

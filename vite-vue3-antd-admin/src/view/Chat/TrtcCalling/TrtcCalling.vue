@@ -4,7 +4,7 @@
     remoteUserID<el-input v-model="state.remoteUserID" :disabled="state.login"></el-input>
     <el-button @click="login" :disabled="state.login">登录</el-button>
     <el-button @click="call" v-if="state.login">拨打</el-button>
-    <VideoPopup v-show="state.show"></VideoPopup>
+    <VideoPopup v-model:show="state.show" @join="join" @leave="leave"></VideoPopup>
   </div>
 </template>
 <script setup>
@@ -33,6 +33,7 @@ let trtcclient = null;
 function call (options) {
   trtcclient.callClient({ userID: state.remoteUserID });
 }
+
 function login () {
   trtcclient.loginClient({
     userID: state.userID,
@@ -41,28 +42,24 @@ function login () {
   });
 }
 
-function callSuccess (e) {
-  state.show = true;
+function join(event) {
 }
 
-function acceptSuccess (e) {
-  state.show = true;
+function leave(event) {
 }
 
 function loginSuccess () {
   state.login = true
 }
 
-function leave () {
-  state.show = false;
-}
-
-function reject () {
-  state.show = false;
+function callSuccess (e) {
+  state.show = true;
 }
 
 onMounted(() => {
   trtcclient = new trtcCalling({ SDKAppID: 1400537412 });
+  eventEmitter.on("login-success", loginSuccess);
+  eventEmitter.on("call-success", callSuccess);
   // new trtcCalling({ SDKAppID: import.meta.env.VUE_APP_SDKAPPID })
 });
 
