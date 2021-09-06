@@ -2,6 +2,10 @@
   <div id="video-popup" v-show="show">
     <div class="remote-video" id="remote_video"></div>
     <div class="local-video" id="local_video"></div>
+    <div class="hang-up" @click="hangup">
+      <img src="../../../../assets/images/guaduandianhua.png" alt="" srcset="">
+      挂断
+    </div>
   </div>
 </template>
 <script setup>
@@ -9,9 +13,6 @@ import {
   defineProps,
   reactive,
   defineEmits,
-  useAttrs,
-  useSlots,
-  ref,
   onMounted,
   defineExpose,
   toRefs
@@ -24,6 +25,10 @@ const prop = defineProps({
   show: {
     type: Boolean,
     default: false
+  },
+  trtcclient: {
+    type: Object,
+    default: null
   }
 })
 
@@ -46,7 +51,12 @@ function leave () {
 }
 
 function reject () {
+  debugger
   state.show = false;
+}
+
+function hangup () {
+  prop.trtcclient.hangupClient();
 }
 
 function dragEvent () {
@@ -125,6 +135,17 @@ defineExpose(
   height: 40%;
   width: 25%;
   background: black;
+  cursor: pointer;
+}
+
+.hang-up {
+  width: 64px;
+  position: absolute;
+  z-index: 99;
+  bottom: 11%;
+  left: 50%;
+  transform: translateX(-32px);
+  text-align: center;
   cursor: pointer;
 }
 </style>

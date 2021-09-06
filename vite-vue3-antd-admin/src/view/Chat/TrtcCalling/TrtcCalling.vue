@@ -4,7 +4,7 @@
     remoteUserID<el-input v-model="state.remoteUserID" :disabled="state.login"></el-input>
     <el-button @click="login" :disabled="state.login">登录</el-button>
     <el-button @click="call" v-if="state.login">拨打</el-button>
-    <VideoPopup v-model:show="state.show" @join="join" @leave="leave"></VideoPopup>
+    <VideoPopup v-model:show="state.show" :trtcclient="trtcclient" @join="join" @leave="leave"></VideoPopup>
   </div>
 </template>
 <script setup>
@@ -12,11 +12,7 @@ import trtcCalling from "./../modules/trtcCalling";
 import VideoPopup from "./modules/VideoPopup.vue";
 import eventEmitter from "../../../plugin/bus";
 import {
-  defineProps,
   reactive,
-  defineEmits,
-  useAttrs,
-  useSlots,
   onMounted,
   onBeforeUnmount,
 } from "vue";
@@ -25,10 +21,11 @@ const state = reactive({
   show: false,
   userID: '',
   remoteUserID: '',
-  login: false
+  login: false,
+  trtcclient: null
 });
 
-let trtcclient = null;
+let trtcclient = new trtcCalling({ SDKAppID: 1400537412 });
 
 function call (options) {
   trtcclient.callClient({ userID: state.remoteUserID });
@@ -57,7 +54,6 @@ function callSuccess (e) {
 }
 
 onMounted(() => {
-  trtcclient = new trtcCalling({ SDKAppID: 1400537412 });
   eventEmitter.on("login-success", loginSuccess);
   eventEmitter.on("call-success", callSuccess);
   // new trtcCalling({ SDKAppID: import.meta.env.VUE_APP_SDKAPPID })

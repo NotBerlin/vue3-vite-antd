@@ -47,12 +47,12 @@ export default class TrtcClient {
   callClient (options) {
     this.remoteUserID = options.userID
     let promise = this.trtcCalling.call({ userID: options.userID, type: 2, timeout: 0 });
-    promise.then(() => {
+    promise.then((res) => {
       //success
       console.log('拨打了' + options.userID + '电话')
       eventEmitter.emit('call-success')
-      this.openCameraClient.apply(this)
-      this.startLocalViewClient.apply(this)
+      // this.openCameraClient.apply(this)
+      // this.startLocalViewClient.apply(this)
     }).catch(error => {
       console.warn('call error:', error)
     });
@@ -70,7 +70,7 @@ export default class TrtcClient {
     let promise = this.trtcCalling.accept({ inviteID: inviteID, roomID: inviteData.roomID, callType: inviteData.callType });
     promise.then(() => {
       eventEmitter.emit('accept-success')
-      this.openCameraClient.apply(this)
+      // this.openCameraClient.apply(this)
       this.startLocalViewClient.apply(this)
     }).catch(error => {
       console.warn('accept error:', error);
@@ -119,6 +119,7 @@ export default class TrtcClient {
     this.acceptClient({ inviteID, sponsor, inviteData })
   }
   onUserEnterClient () {
+    this.startLocalViewClient()
     this.startRemoteViewClient()
   }
   onUserLeaveClient () {
