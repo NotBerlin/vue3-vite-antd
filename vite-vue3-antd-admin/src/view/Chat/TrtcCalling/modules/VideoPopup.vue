@@ -29,10 +29,23 @@ const prop = defineProps({
   trtcclient: {
     type: Object,
     default: null
+  },
+  acceptSuccessed: {
+    type: Function,
+    default: () => {}
+  },
+  hanguped: {
+    type: Function,
+    default: () => {}
   }
 })
 
 function acceptSuccess (e) {
+  prop.acceptSuccessed({
+    type: 'accept',
+    msg: '接受视频邀请',
+    data: {}
+  })
   emit('update:show', true)
   emit('join', {
     type: 'accept',
@@ -51,12 +64,17 @@ function leave () {
 }
 
 function reject () {
-  debugger
   state.show = false;
 }
 
 function hangup () {
   prop.trtcclient.hangupClient();
+  prop.hanguped({
+    type: 'hangup',
+    msg: '挂断视频',
+    data: {}
+  })
+  leave()
 }
 
 function dragEvent () {

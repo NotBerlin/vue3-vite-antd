@@ -4,7 +4,7 @@
     remoteUserID<el-input v-model="state.remoteUserID" :disabled="state.login"></el-input>
     <el-button @click="login" :disabled="state.login">登录</el-button>
     <el-button @click="call" v-if="state.login">拨打</el-button>
-    <VideoPopup v-model:show="state.show" :trtcclient="trtcclient" @join="join" @leave="leave"></VideoPopup>
+    <VideoPopup v-model:show="state.show" :trtcclient="trtcclient" @join="join" @leave="leave" :acceptSuccessed="acceptSuccessed" :hanguped="hanguped"></VideoPopup>
   </div>
 </template>
 <script setup>
@@ -51,6 +51,14 @@ function loginSuccess () {
 
 function callSuccess (e) {
   state.show = true;
+}
+
+function acceptSuccessed (e) {
+  debugger
+}
+
+function hanguped (e) {
+  debugger
 }
 
 onMounted(() => {

@@ -18,7 +18,11 @@ export default {
     })
 
     onMounted(async () => {
-      const res = await $_http.get($_API.API_JAVA_TEST, {});
+      const res = await $_http.get($_API.API_JAVA_TEST, {
+        params: {
+          userName: '陈'
+        }
+      });
       if (res.code === 0 || res.success) {
         state.java = res.data
       }
