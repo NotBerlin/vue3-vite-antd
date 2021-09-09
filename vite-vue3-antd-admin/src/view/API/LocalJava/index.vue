@@ -17,7 +17,7 @@ export default {
       java: {}
     })
 
-    onMounted(async () => {
+    async function getTest () {
       const res = await $_http.get($_API.API_JAVA_TEST, {
         params: {
           userName: '陈'
@@ -26,9 +26,33 @@ export default {
       if (res.code === 0 || res.success) {
         state.java = res.data
       }
+    }
+
+    async function postTest () {
+      const params = {
+        list:
+          [
+            {
+              userName: 'laochen',
+              age: 18
+            }, {
+              userName: 'laodong',
+              age: 11
+            }
+          ]
+      }
+      const res = await $_http.post($_API.API_JAVA_TEST_TEST2, params);
+      if (res.code === 0 || res.success) {
+        state.java = res.data
+      }
+    }
+
+    onMounted(() => {
+      // getTest()
+      postTest()
     })
 
-    return {...toRefs(state)}
+    return { ...toRefs(state) }
   }
 }
 </script>

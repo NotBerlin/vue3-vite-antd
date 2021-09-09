@@ -106,7 +106,6 @@ _axios.interceptors.response.use(
     }
   },
   (error) => {
-    debugger
     if (!navigator.onLine) {
       ElMessage({ type: 'error', message: '网络连接异常，请检查网络！' })
       return Promise.reject(error)
