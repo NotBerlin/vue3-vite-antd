@@ -15,6 +15,7 @@ import {
   reactive,
   onMounted,
   onBeforeUnmount,
+  nextTick,
 } from "vue";
 
 const state = reactive({
@@ -31,6 +32,7 @@ function call (options) {
   trtcclient.callClient({ userID: state.remoteUserID });
 }
 
+<<<<<<< Updated upstream
 function login () {
   trtcclient.loginClient({
     userID: state.userID,
@@ -47,6 +49,13 @@ function leave(event) {
 
 function loginSuccess () {
   state.login = true
+=======
+function callSuccess(e) {
+  state.show = true;
+  nextTick(() => {
+    trtcclient.startLocalViewClient()
+  })
+>>>>>>> Stashed changes
 }
 
 function callSuccess (e) {
