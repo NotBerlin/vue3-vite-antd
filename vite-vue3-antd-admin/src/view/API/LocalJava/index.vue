@@ -28,6 +28,15 @@ export default {
       }
     }
 
+    // 使用get请求，传递数组参数，后端使用strs变量接收
+    async function getTest1 () {
+      const res = await $_http.get($_API.API_JAVA_TEST_TEST1 + '?strs=123&strs=321&strs=1');
+      if (res.code === 0 || res.success) {
+        state.java = res.data
+      }
+    }
+
+    // 通过post请求，传递对象
     async function postTest () {
       const params = {
         list:
@@ -47,9 +56,81 @@ export default {
       }
     }
 
+    // 通过post请求，传递数组
+    async function postTest4 () {
+      const params = [
+        {
+          userName: 'laochen',
+          age: 18
+        }, {
+          userName: 'laodong',
+          age: 11
+        }
+      ]
+      const res = await $_http.post($_API.API_JAVA_TEST_TEST4, params);
+      if (res.code === 0 || res.success) {
+        state.java = res.data
+      }
+    }
+
+    // 通过post请求，中文乱码
+    async function postTest5 () {
+      const params = [
+        {
+          userName: '老陈',
+          age: 18
+        }, {
+          userName: '老懂',
+          age: 11
+        }
+      ]
+      const res = await $_http.post($_API.API_JAVA_TEST_TEST5, params);
+      if (res.code === 0 || res.success) {
+        state.java = res.data
+      }
+    }
+
+    // 使用get请求，传递参数名不对，到后端接口进行映射
+    async function getTest6 () {
+      const res = await $_http.get($_API.API_JAVA_TEST_TEST6);
+      if (res.code === 0 || res.success) {
+        state.java = res.data
+      }
+    }
+
+    // RESTFUL风格请求参数
+    async function getTest7 () {
+      const res = await $_http.get($_API.API_JAVA_TEST_TEST7 + '/1');
+      if (res.code === 0 || res.success) {
+        state.java = res.data
+      }
+    }
+
+    // 格式化传参
+    async function getTest8 () {
+      const res = await $_http.get($_API.API_JAVA_TEST_TEST8 + '?date=2021/09/10');
+      if (res.code === 0 || res.success) {
+        state.java = res.data
+      }
+    }
+
+    // 格式化传参
+    async function getTest10 () {
+      const res = await $_http.get($_API.API_JAVA_TEST_TEST10);
+      if (res.code === 0 || res.success) {
+        state.java = res.data
+      }
+    }
+
     onMounted(() => {
       // getTest()
-      postTest()
+      // postTest()
+      // getTest1()
+      // postTest4()
+      // postTest5()
+      // getTest6()
+      // getTest8()
+      getTest10()
     })
 
     return { ...toRefs(state) }
