@@ -4,11 +4,11 @@
     <div class="seazi-a-seat"></div>
     <div class="seazi-a-seat"></div>
     <div class="login-iframe">
-      <el-form label-position="right" label-width="80px" :model="form">
-        <el-form-item label="账号：">
+      <el-form label-position="right" label-width="80px" :model="form" :rules="rules" ref="ruleForm">
+        <el-form-item label="账号：" prop="account">
           <el-input v-model="form.account"></el-input>
         </el-form-item>
-        <el-form-item label="密码：">
+        <el-form-item label="密码：" prop="password">
           <el-input v-model="form.password"></el-input>
         </el-form-item>
       </el-form>
@@ -29,7 +29,13 @@ const form = reactive({
   password: ''
 })
 
+const ruleForm = ref(null)
+
 function login () {
+  // console.log(ruleForm)
+  // ruleForm.value.validate((valid) => {
+  // })
+  // return
   const arr = [
     {
       name: '导航1',
@@ -141,6 +147,14 @@ function login () {
   $router.push({
     path: '/home'
   })
+}
+
+const rules = {
+  // account: [
+  //   {
+  //     required: true, message: '请输入活动名称', trigger: 'blur'
+  //   }
+  // ]
 }
 
 onMounted(() => {
