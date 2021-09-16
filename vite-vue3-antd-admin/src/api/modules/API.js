@@ -12,4 +12,7 @@ export default {
   API_JAVA_TEST_TEST7: 'local/hello/test7',
   API_JAVA_TEST_TEST8: 'local/hello/test8',
   API_JAVA_TEST_TEST10: 'local/hello/test10',
+
+  // 数据库接口
+  API_JAVA_DATABASE_TEST1: 'local/hello/database1',
 }

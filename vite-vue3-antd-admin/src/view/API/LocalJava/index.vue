@@ -122,6 +122,14 @@ export default {
       }
     }
 
+    function postDatabase1() {
+      let params = {
+        name: '老陈',
+        money: 5000
+      }
+      $_http.post($_API.API_JAVA_DATABASE_TEST1, params);
+    }
+
     onMounted(() => {
       // getTest()
       // postTest()
@@ -130,7 +138,7 @@ export default {
       // postTest5()
       // getTest6()
       // getTest8()
-      getTest10()
+      postDatabase1()
     })
 
     return { ...toRefs(state) }
