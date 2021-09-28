@@ -1,15 +1,16 @@
 <template>
   <div id="trtc-calling">
-    <div v-if="!state.login">
+    <div class="cover2" v-if="!state.login">
       userID<el-input v-model="state.userID" :disabled="state.login"></el-input>
       remoteUserID<el-input v-model="state.remoteUserID" :disabled="state.login"></el-input>
       <el-button @click="login" :disabled="state.login">登录</el-button>
     </div>
-    <div v-else>
+    <div class="cover" v-else>
       <Group v-model:login="state.login" :tim="state.tim" />
-      <!-- <el-button @click="call" v-if="state.login">拨打</el-button>
+      <!-- <div id="drag-line" class="drag-line" @mousedown="mouseDown" @mousemove="mouseMove" @mouseup="mouseUp"></div> -->
+      <!-- <el-button @click="call" v-if="state.login">拨打</el-button> -->
       <Tim v-model:login="state.login" :tim="state.tim" />
-      <VideoPopup v-model:show="state.show" :trtcclient="trtcclient" @join="join" @leave="leave" :acceptSuccessed="acceptSuccessed" :hanguped="hanguped"></VideoPopup> -->
+      <VideoPopup v-model:show="state.show" :trtcclient="trtcclient" @join="join" @leave="leave" :acceptSuccessed="acceptSuccessed" :hanguped="hanguped"></VideoPopup>
     </div>
   </div>
 </template>
@@ -31,9 +32,10 @@ const state = reactive({
   show: false,
   userID: '',
   remoteUserID: '',
-  login: false,
+  login: true,
   trtcclient: null,
-  tim: null
+  tim: null,
+  all: 0,
 });
 
 const { $_mode } = useInstance()
@@ -61,7 +63,11 @@ function leave (event) {
 }
 
 function loginSuccess () {
-  state.login = true
+  if (state.all == 1) {
+    state.login = true
+  } else {
+    state.all = 1
+  }
 }
 
 function callSuccess (e) {
@@ -74,18 +80,101 @@ function acceptSuccessed (e) {
 function hanguped (e) {
 }
 
+function TIM_EVENT_SDK_READY () {
+  if (state.all == 1) {
+    state.login = true
+  } else {
+    state.all = 1
+  }
+}
+
 onMounted(() => {
   eventEmitter.on("login-success", loginSuccess);
   eventEmitter.on("call-success", callSuccess);
+  eventEmitter.on("TIM_EVENT_SDK_READY", TIM_EVENT_SDK_READY);
   // new trtcCalling({ SDKAppID: import.meta.env.VUE_APP_SDKAPPID })
+  dragDom = document.getElementById('group-component')
+  dragDom.style.width = '300px'
+  window.addEventListener('mouseup', e => {
+    _move = false
+  });
 });
 
 onBeforeUnmount(() => {
   trtcclient.logoutClient();
+  window.removeEventListener('mouseup', e => {
+    _move = false
+  });
 });
+
+
+let _move = false, _x = 520, _y = 0;
+let dragDom = null;
+
+function mouseDown (event) {
+  _move = true
+  _x = event.pageX;
+  _y = event.pageY;
+}
+
+function mouseMove (event) {
+  if (_move) {
+    console.log('event.pageX: ', event.pageX, '_x: ', _x, '_move: ', _move)
+    if (event.pageX >= 630 || event.pageX <= 395) { } else {
+      dragDom.style.width = event.pageX - 220 + 'px';
+    }
+  }
+}
+
+function mouseUp (event) {
+  _move = false
+}
 </script>
 <style>
 #trtc-calling {
   position: relative;
+}
+
+.cover {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+}
+
+.cover2 {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  height: 100%;
+  padding: 50px 30px;
+}
+
+.drag-line {
+  height: 100%;
+  width: 4px;
+  position: relative;
+  right: 0;
+  top: 0;
+}
+
+.drag-line::before {
+  content: '';
+  position: absolute;
+  height: 100%;
+  width: 1px;
+  background: #eeeeee;
+  right: 3px;
+}
+
+.drag-line::after {
+  content: '';
+  position: absolute;
+  height: 100%;
+  width: 2px;
+  background: #eeeeee;
+  right: 0;
+  cursor: col-resize;
 }
 </style>

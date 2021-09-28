@@ -1,0 +1,32 @@
+.group-component {
+  width: 300px;
+  height: 100%;
+  position: relative;
+}
+
+.drag-line {
+  height: 100%;
+  width: 4px;
+  position: relative;
+  right: 0;
+  top: 0;
+}
+
+.drag-line::before {
+  content: '';
+  position: absolute;
+  height: 100%;
+  width: 1px;
+  background: #eeeeee;
+  right: 3px;
+}
+
+.drag-line::after {
+  content: '';
+  position: absolute;
+  height: 100%;
+  width: 2px;
+  background: #eeeeee;
+  right: 0;
+  cursor: col-resize;
+}

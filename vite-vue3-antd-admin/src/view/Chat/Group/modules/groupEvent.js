@@ -4,7 +4,7 @@ import TIM from 'tim-js-sdk';
  * @Author: dlAm 
  * @Date: 2021-09-28 14:50:10 
  * @Last Modified by: dlAm
- * @Last Modified time: 2021-09-28 14:53:44
+ * @Last Modified time: 2021-09-28 15:27:41
  * @Power:  拉取群组信息
  * @Description:  
  * 群资料过滤器。除默认拉取的群资料外，指定需要额外拉取的群资料，支持的值如下：
@@ -21,13 +21,8 @@ import TIM from 'tim-js-sdk';
  */
 
 export function getGroupList () {
-  debugger
   let promise = this.getGroupList({
     groupProfileFilter: [TIM.TYPES.GRP_PROFILE_OWNER_ID],
   });
-  promise.then(function (imResponse) {
-    console.log(imResponse.data.groupList); // 群组列表
-  }).catch(function (imError) {
-    console.warn('getGroupList error:', imError); // 获取群组列表失败的相关信息
-  });
+  return promise;
 }

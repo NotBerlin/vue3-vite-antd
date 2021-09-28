@@ -1,5 +1,6 @@
 import TRTCCalling from 'trtc-calling-js';
 import eventEmitter from '../../../plugin/bus'
+import timListener from './timListener'
 
 export default class TrtcClient {
   constructor(options) {
@@ -18,6 +19,7 @@ export default class TrtcClient {
     };
     this.trtcCalling = new TRTCCalling(options);
     this.tim = this.trtcCalling._timClient._tim
+    timListener(this.tim)
     this.trtcCalling.setLogLevel(0);
     this.handleEventTRTCCALLINGClient()
     this.handleEventTIMClient()

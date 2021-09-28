@@ -1,5 +1,5 @@
 <template>
-<div id="tim-page">
+<div id="tim-page" class="tim-page">
   
 </div>
 </template>
@@ -44,3 +44,12 @@ watch(() => prop.login, (val) => {
 onMounted(() => {
 })
 </script>
+
+
+<style scoped>
+.tim-page {
+  flex: 1;
+  height: 100%;
+  background: seashell;
+}
+</style>
