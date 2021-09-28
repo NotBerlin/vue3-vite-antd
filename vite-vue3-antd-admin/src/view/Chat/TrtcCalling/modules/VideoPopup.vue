@@ -41,6 +41,7 @@ const prop = defineProps({
 })
 
 function acceptSuccess (e) {
+  debugger
   prop.acceptSuccessed({
     type: 'accept',
     msg: '接受视频邀请',

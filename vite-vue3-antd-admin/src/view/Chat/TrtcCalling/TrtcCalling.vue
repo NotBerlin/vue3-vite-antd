@@ -4,12 +4,14 @@
     remoteUserID<el-input v-model="state.remoteUserID" :disabled="state.login"></el-input>
     <el-button @click="login" :disabled="state.login">登录</el-button>
     <el-button @click="call" v-if="state.login">拨打</el-button>
+    <Tim v-model:login="state.login" :tim="state.tim" />
     <VideoPopup v-model:show="state.show" :trtcclient="trtcclient" @join="join" @leave="leave" :acceptSuccessed="acceptSuccessed" :hanguped="hanguped"></VideoPopup>
   </div>
 </template>
 <script setup>
 import trtcCalling from "./../modules/trtcCalling";
 import VideoPopup from "./modules/VideoPopup.vue";
+import Tim from "../Tim/Tim.vue"
 import eventEmitter from "../../../plugin/bus";
 import {
   reactive,
@@ -23,7 +25,8 @@ const state = reactive({
   userID: '',
   remoteUserID: '',
   login: false,
-  trtcclient: null
+  trtcclient: null,
+  tim: null
 });
 
 let trtcclient = new trtcCalling({ SDKAppID: 1400537412 });
@@ -32,30 +35,23 @@ function call (options) {
   trtcclient.callClient({ userID: state.remoteUserID });
 }
 
-<<<<<<< Updated upstream
 function login () {
   trtcclient.loginClient({
     userID: state.userID,
     userSig: state.userID === '123456' ?
       "eJwtzNsKgkAUheF3mVtD9hz2KEIXSoREJ7C6T2aUrVmeCCF690y9XN*C-8Mu*8R925YFTLjAVtMmY589ZTQxF1KhXp7OlPe6JsMCrgBQeoqL*bFDTa0dHREFAMzaU-U3LUEB*ohLhfIx3BehjHfxcC5PR9P4h8pxmlRsIn1V*tG*slu*TcMi44nXrdn3B7alMB4_" : 'eJw1zF0LgjAUxvHvsttCjptnkdBtBHVjilR3kts6jHLMl6zou2dal8-vgf*LZbs06JRnMeMBsPm4qVS3hjSN3NbK-4*6tIVzVLI4jABQLKKQT4-qHXk1OCJyAJi0oevXpIAIpFzir0Jm6GYPs34mW5ue70ff5Vbwvt2fVHHY6EaLBK295J1OKjOrVuz9AT1VMqM_',
   });
+  state.tim = trtcclient.tim
 }
 
-function join(event) {
+function join (event) {
 }
 
-function leave(event) {
+function leave (event) {
 }
 
 function loginSuccess () {
   state.login = true
-=======
-function callSuccess(e) {
-  state.show = true;
-  nextTick(() => {
-    trtcclient.startLocalViewClient()
-  })
->>>>>>> Stashed changes
 }
 
 function callSuccess (e) {
@@ -63,11 +59,9 @@ function callSuccess (e) {
 }
 
 function acceptSuccessed (e) {
-  debugger
 }
 
 function hanguped (e) {
-  debugger
 }
 
 onMounted(() => {
