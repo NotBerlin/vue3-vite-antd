@@ -9,7 +9,7 @@
       <Group v-model:login="state.login" :tim="state.tim" />
       <!-- <div id="drag-line" class="drag-line" @mousedown="mouseDown" @mousemove="mouseMove" @mouseup="mouseUp"></div> -->
       <!-- <el-button @click="call" v-if="state.login">拨打</el-button> -->
-      <Tim v-model:login="state.login" :tim="state.tim" />
+      <TimPage v-model:login="state.login" :tim="state.tim" />
       <VideoPopup v-model:show="state.show" :trtcclient="trtcclient" @join="join" @leave="leave" :acceptSuccessed="acceptSuccessed" :hanguped="hanguped"></VideoPopup>
     </div>
   </div>
@@ -17,7 +17,7 @@
 <script setup>
 import trtcCalling from "./../modules/trtcCalling";
 import VideoPopup from "./modules/VideoPopup.vue";
-import Tim from "../Tim/Tim.vue"
+import TimPage from "../Tim/Tim.vue"
 import Group from "../Group/Group"
 import eventEmitter from "../../../plugin/bus";
 import useInstance from '../../../mixins/instance'
@@ -32,7 +32,7 @@ const state = reactive({
   show: false,
   userID: '',
   remoteUserID: '',
-  login: true,
+  login: false,
   trtcclient: null,
   tim: null,
   all: 0,
@@ -41,7 +41,8 @@ const state = reactive({
 const { $_mode } = useInstance()
 
 let SDKAppID = parseInt($_mode.VITE_APP_SDKAPPID)
-let trtcclient = new trtcCalling({ SDKAppID });
+let timClinet = null;
+let trtcclient = new trtcCalling({ SDKAppID, tim: timClinet });
 
 function call (options) {
   trtcclient.callClient({ userID: state.remoteUserID });
@@ -53,7 +54,12 @@ function login () {
     userSig: state.userID === '123456' ?
       "eJwtzNsKgkAUheF3mVtD9hz2KEIXSoREJ7C6T2aUrVmeCCF690y9XN*C-8Mu*8R925YFTLjAVtMmY589ZTQxF1KhXp7OlPe6JsMCrgBQeoqL*bFDTa0dHREFAMzaU-U3LUEB*ohLhfIx3BehjHfxcC5PR9P4h8pxmlRsIn1V*tG*slu*TcMi44nXrdn3B7alMB4_" : 'eJw1zF0LgjAUxvHvsttCjptnkdBtBHVjilR3kts6jHLMl6zou2dal8-vgf*LZbs06JRnMeMBsPm4qVS3hjSN3NbK-4*6tIVzVLI4jABQLKKQT4-qHXk1OCJyAJi0oevXpIAIpFzir0Jm6GYPs34mW5ue70ff5Vbwvt2fVHHY6EaLBK295J1OKjOrVuz9AT1VMqM_',
   });
-  state.tim = trtcclient.tim
+  timClinet.login({
+    userID: state.userID,
+    userSig: state.userID === '123456' ?
+      "eJwtzNsKgkAUheF3mVtD9hz2KEIXSoREJ7C6T2aUrVmeCCF690y9XN*C-8Mu*8R925YFTLjAVtMmY589ZTQxF1KhXp7OlPe6JsMCrgBQeoqL*bFDTa0dHREFAMzaU-U3LUEB*ohLhfIx3BehjHfxcC5PR9P4h8pxmlRsIn1V*tG*slu*TcMi44nXrdn3B7alMB4_" : 'eJw1zF0LgjAUxvHvsttCjptnkdBtBHVjilR3kts6jHLMl6zou2dal8-vgf*LZbs06JRnMeMBsPm4qVS3hjSN3NbK-4*6tIVzVLI4jABQLKKQT4-qHXk1OCJyAJi0oevXpIAIpFzir0Jm6GYPs34mW5ue70ff5Vbwvt2fVHHY6EaLBK295J1OKjOrVuz9AT1VMqM_',
+  })
+  state.tim = timClinet
 }
 
 function join (event) {
@@ -93,18 +99,20 @@ onMounted(() => {
   eventEmitter.on("call-success", callSuccess);
   eventEmitter.on("TIM_EVENT_SDK_READY", TIM_EVENT_SDK_READY);
   // new trtcCalling({ SDKAppID: import.meta.env.VUE_APP_SDKAPPID })
-  dragDom = document.getElementById('group-component')
-  dragDom.style.width = '300px'
-  window.addEventListener('mouseup', e => {
-    _move = false
-  });
+
+  // dragDom = document.getElementById('group-component')
+  // dragDom.style.width = '300px'
+  // window.addEventListener('mouseup', e => {
+  //   _move = false
+  // });
 });
 
 onBeforeUnmount(() => {
   trtcclient.logoutClient();
-  window.removeEventListener('mouseup', e => {
-    _move = false
-  });
+
+  // window.removeEventListener('mouseup', e => {
+  //   _move = false
+  // });
 });
 
 
@@ -160,7 +168,7 @@ function mouseUp (event) {
 }
 
 .drag-line::before {
-  content: '';
+  content: "";
   position: absolute;
   height: 100%;
   width: 1px;
@@ -169,7 +177,7 @@ function mouseUp (event) {
 }
 
 .drag-line::after {
-  content: '';
+  content: "";
   position: absolute;
   height: 100%;
   width: 2px;

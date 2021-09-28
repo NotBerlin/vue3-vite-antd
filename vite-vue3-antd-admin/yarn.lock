@@ -1611,6 +1611,11 @@ tim-js-sdk@^2.13.1:
   resolved "https://registry.yarnpkg.com/tim-js-sdk/-/tim-js-sdk-2.13.1.tgz#2a242a4452562e4870a2e5939457e6b15318da63"
   integrity sha512-gSIIOFP4o3vjURDXweaC1ZBQd5+w4/UEjLGiVnBpXb5w3hk5W69owN+waMYbzSlHaH34QudMay+jrRx6GBCZHA==
 
+tim-upload-plugin@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/tim-upload-plugin/-/tim-upload-plugin-1.0.3.tgz#7de5d1ae178b8b6d010d090342f6d0f1cb76f447"
+  integrity sha512-cbPhPKI5Q+VP4R8dAlNo0H/KE/zZ89y91Jqz8eIRxNfg2tfGjfNjWilGhlt4eik9R5Dw2Vmc5QyiNKZ6z0r/Fw==
+
 tinycolor2@^1.4.1:
   version "1.4.2"
   resolved "https://registry.yarnpkg.com/tinycolor2/-/tinycolor2-1.4.2.tgz#3f6a4d1071ad07676d7fa472e1fac40a719d8803"

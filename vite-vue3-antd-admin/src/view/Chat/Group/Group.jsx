@@ -1,6 +1,5 @@
 import { defineComponent } from "@vue/runtime-core";
 import { onMounted, reactive, onBeforeUnmount } from "vue";
-import { getGroupList } from "./modules/groupEvent.js"
 import eventEmitter from '../../../plugin/bus'
 import classes from './Group.module.css'
 import { ElMessage } from 'element-plus'
@@ -19,7 +18,8 @@ export default defineComponent({
   },
   setup (props, context) {
     const state = reactive({
-      groupList: []
+      groupList: [],
+      friendList: []
     })
 
     // fn是我们需要包装的事件回调, delay是每次推迟执行的等待时间
@@ -56,7 +56,7 @@ export default defineComponent({
 
     function mouseMove (event) {
       if (_move) {
-        ElMessage({ type: 'warning', message: '功能尚未完善' })
+        // ElMessage({ type: 'warning', message: '功能尚未完善' })
         console.log('event.pageX: ', event.pageX, '_x: ', _x, '_move: ', _move)
         if (event.pageX >= 520 || event.pageX <= 395) { } else {
           // dragDom.style.width = event.pageX - 220 + 'px';
@@ -69,16 +69,6 @@ export default defineComponent({
     }
 
     onMounted(async () => {
-      try {
-        let groupListRes = await getGroupList.apply(props.tim)
-        if (groupListRes.code == 0) {
-          state.groupList = groupListRes.data.groupList
-        } else {
-          ElMessage({ type: 'warning', message: '获取群组数据失败' })
-        }
-      } catch (error) {
-        console.log(error)
-      }
       dragDom = document.getElementById('group-component')
       dragDom.style.width = '300px'
       window.addEventListener('mouseup', e => {
