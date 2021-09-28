@@ -15,5 +15,6 @@ const app = createApp(App)
 app.config.globalProperties.$bus = Bus
 app.config.globalProperties.$_http = axios
 app.config.globalProperties.$_API = $_API
+app.config.globalProperties.$_mode = import.meta.env
 
 app.use(router).use(store).use(useElement).mount('#app')

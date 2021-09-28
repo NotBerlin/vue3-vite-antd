@@ -1,5 +1,7 @@
 <template>
-
+<div id="tim-page">
+  
+</div>
 </template>
 
 <script setup>

@@ -1,12 +1,12 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import styleImport from 'vite-plugin-style-import'
-
-console.log(import.meta.env)
+import vueJsx from '@vitejs/plugin-vue-jsx'
 
 export default defineConfig({
   plugins: [
     vue(),
+    vueJsx(),
     styleImport({
       libs: [
         {

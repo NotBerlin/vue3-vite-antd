@@ -1,18 +1,25 @@
 <template>
   <div id="trtc-calling">
-    userID<el-input v-model="state.userID" :disabled="state.login"></el-input>
-    remoteUserID<el-input v-model="state.remoteUserID" :disabled="state.login"></el-input>
-    <el-button @click="login" :disabled="state.login">登录</el-button>
-    <el-button @click="call" v-if="state.login">拨打</el-button>
-    <Tim v-model:login="state.login" :tim="state.tim" />
-    <VideoPopup v-model:show="state.show" :trtcclient="trtcclient" @join="join" @leave="leave" :acceptSuccessed="acceptSuccessed" :hanguped="hanguped"></VideoPopup>
+    <div v-if="!state.login">
+      userID<el-input v-model="state.userID" :disabled="state.login"></el-input>
+      remoteUserID<el-input v-model="state.remoteUserID" :disabled="state.login"></el-input>
+      <el-button @click="login" :disabled="state.login">登录</el-button>
+    </div>
+    <div v-else>
+      <Group v-model:login="state.login" :tim="state.tim" />
+      <!-- <el-button @click="call" v-if="state.login">拨打</el-button>
+      <Tim v-model:login="state.login" :tim="state.tim" />
+      <VideoPopup v-model:show="state.show" :trtcclient="trtcclient" @join="join" @leave="leave" :acceptSuccessed="acceptSuccessed" :hanguped="hanguped"></VideoPopup> -->
+    </div>
   </div>
 </template>
 <script setup>
 import trtcCalling from "./../modules/trtcCalling";
 import VideoPopup from "./modules/VideoPopup.vue";
 import Tim from "../Tim/Tim.vue"
+import Group from "../Group/Group"
 import eventEmitter from "../../../plugin/bus";
+import useInstance from '../../../mixins/instance'
 import {
   reactive,
   onMounted,
@@ -29,7 +36,10 @@ const state = reactive({
   tim: null
 });
 
-let trtcclient = new trtcCalling({ SDKAppID: 1400537412 });
+const { $_mode } = useInstance()
+
+let SDKAppID = parseInt($_mode.VITE_APP_SDKAPPID)
+let trtcclient = new trtcCalling({ SDKAppID });
 
 function call (options) {
   trtcclient.callClient({ userID: state.remoteUserID });

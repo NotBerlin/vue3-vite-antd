@@ -2,9 +2,9 @@ import { getCurrentInstance } from 'vue'
 
 export default function () {
   const { appContext } = getCurrentInstance()
-  const { $bus, $route, $router, $store, $_http, $_API } = appContext.config.globalProperties
+  const { $bus, $route, $router, $store, $_http, $_API, $_mode } = appContext.config.globalProperties
 
   return {
-    $bus, $route, $router, $store, $_http, $_API
+    $bus, $route, $router, $store, $_http, $_API, $_mode
   }
 }
