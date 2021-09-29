@@ -151,7 +151,7 @@ export default defineComponent({
         {
           state.friendList.map(element => {
             return (
-              <div className={classes['friend-item']} onClick={changeConversation(element)}>
+              <div className={classes['friend-item']} onClick={() => changeConversation(element)}>
                 <img src={imageList[0]}></img>
                 <div className={classes['friend-item-content']}>
                   <div className={classes['friend-item-content-name']}>{element.remark}</div>
