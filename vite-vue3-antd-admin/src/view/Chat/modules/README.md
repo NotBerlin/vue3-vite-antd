@@ -75,3 +75,8 @@ function reject () {
   state.show = false;
 }
 ```
+
+
+# timFriendShip
+## 生命周期
+### TIM_EVENT_SDK_READY tim ready

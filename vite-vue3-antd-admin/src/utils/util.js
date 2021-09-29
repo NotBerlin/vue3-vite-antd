@@ -35,7 +35,7 @@ export function setSession (key, value) {
  * @param {*} item 
  * @returns 
  */
-export function gen_text_img (s, sex,type) {
+export function gen_text_img (s, sex, type) {
   if (s) {
     if (s.length > 0) {
       s = s.substring(0, 1)
@@ -50,7 +50,7 @@ export function gen_text_img (s, sex,type) {
         "#FF9AC9"
       ]
     }
-    if(type==='end'){
+    if (type === 'end') {
       colors = [
         "#909399"
       ]
@@ -78,7 +78,7 @@ export function gen_text_img (s, sex,type) {
  * @param {*} n 
  * @returns 
  */
-export function prefixZero(num, n) {
+export function prefixZero (num, n) {
   return (Array(n).join(0) + num).slice(-n);
 }
 
@@ -380,4 +380,63 @@ function formatDate (now) {
   clock += mm;
   clock += ":00";
   return clock;
+}
+
+export function time2Str (timestamp) {
+  let str = '', time = new Date(timestamp)
+  let year = time.getFullYear(), month = time.getMonth() + 1, date = time.getDate(), day = time.getDay()
+  if (month < 10) {
+    month = '0' + month
+  }
+  if (date < 10) {
+    date = '0' + date
+  }
+  str = year + '-' + month + '-' + date
+  return str
+}
+
+export function formatTime (timestamp) {
+  let now = new Date()
+  let nowTimeStamp = now.getTime(), day = now.getDay()
+  let nowStr = time2Str(nowTimeStamp), dayTimeStamp = day * 24 * 60 * 60
+  let now0000TimeStamp = new Date(nowStr).getTime() - 8 * 60 * 60 * 1000
+  let nowWeekTimeStamp = now0000TimeStamp - dayTimeStamp
+  if (timestamp > now0000TimeStamp) {
+    let hourse = new Date(timestamp).getHours()
+    let reduceTimeStamp = timestamp - now0000TimeStamp - hourse * 60 * 60 * 1000
+    let reduceMimutes = parseInt(reduceTimeStamp / 1000 / 60)
+    if (hourse < 10) {
+      hourse = '0' + hourse
+    }
+    return hourse + ':' + reduceMimutes
+  } else if (timestamp > nowWeekTimeStamp) {
+    let week = new Date(timestamp).getDay()
+    switch (week) {
+      case 1:
+        return '星期一';
+        break;
+      case 2:
+        return '星期二';
+        break;
+      case 3:
+        return '星期三';
+        break;
+      case 4:
+        return '星期四';
+        break;
+      case 5:
+        return '星期五';
+        break;
+      case 6:
+        return '星期六';
+        break;
+      case 7:
+        return '星期天';
+        break;
+      default:
+        break;
+    }
+  } else {
+    return time2Str(timestamp)
+  }
 }

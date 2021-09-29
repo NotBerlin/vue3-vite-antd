@@ -16,28 +16,13 @@ import {
 } from "vue";
 
 const prop = defineProps({
-  tim: {
+  timClinet: {
     type: Object,
     default: () => { }
   },
   login: {
     type: Boolean,
     default: false
-  }
-})
-
-
-let onMessageReceived = function (event) {
-  // event.data - 存储 Message 对象的数组 - [Message]
-};
-
-function timListener () {
-  prop.tim.on("onMessageReceived", onMessageReceived);
-}
-
-watch(() => prop.login, (val) => {
-  if (val) {
-    timListener()
   }
 })
 
