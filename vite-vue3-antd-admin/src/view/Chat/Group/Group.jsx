@@ -17,15 +17,45 @@ export default defineComponent({
       default: false
     }
   },
+  emits: ['openModel'],
   setup (props, context) {
     const state = reactive({
       groupList: [],
       friendList: [],
-      searchText: ''
+      consversationList: [],
+      searchText: '',
+      activeId: 1,
+      actionBar: [
+        {
+          image: 'xiaoxi',
+          name: '消息',
+          id: 1,
+          active: true
+        },
+        {
+          image: 'yonghu',
+          name: '联系人',
+          id: 2,
+          active: false
+        }
+      ],
+      selectId: 0,
+      visible: false
     })
 
     const imageList = [
       "/src/assets/images/portrait.jpeg"
+    ]
+
+    const contactsSelect = [
+      {
+        name: '分组',
+        id: 0
+      },
+      {
+        name: '群组',
+        id: 1
+      }
     ]
 
     // watch(state.searchText, (val) => {
@@ -78,21 +108,61 @@ export default defineComponent({
       _move = false
     }
 
+    function changePage (element) {
+      state.actionBar.forEach(item => item.active = false)
+      element.active = true
+      state.activeId = element.id
+    }
+
+    function changeSelect (element) {
+      state.selectId = element.id
+    }
+
+    function openDialog () {
+      context.emit('openModel')
+    }
+
     function listenerTimRelationshipChain ({ detail }) {
       console.log('%c listenerTimRelationshipChain:', 'color: red, font-size: 24px', detail)
-      state.friendList = detail.data
-      if (detail.code == 0 && detail.type == 'addFriend' && detail.data == '好友请求已同意') {
-        listenerTimAddFriend()
+      if (detail.code == 0) {
+        switch (detail.type) {
+          case 'addFriend':
+            if (detail.data == '好友请求已同意') {
+              listenerTimAddFriend()
+            }
+            break;
+          case 'getFriendGroupList':
+            state.friendList = detail.data
+            break;
+          default:
+            break;
+        }
       }
       // props.timClinet.addFriend({ to: '123456', remark: '宝贝', groupName: '宝贝鱼塘', wording: '我爱你' })
     }
 
     function listenerTimGroupList ({ detail }) {
-      console.log(detail)
+      console.log('%c listenerTimGroupList:', 'color: red, font-size: 24px', detail)
+      if (detail.code == 0) {
+        switch (detail.type) {
+          case 'getGroupList':
+            state.groupList = detail.data
+            break;
+          default:
+            break;
+        }
+      }
     }
 
     function listenerTimAddFriend ({ detail }) {
       props.timClinet.getFriendList()
+    }
+
+    function listenerTimConversationList ({ detail }) {
+      console.log('Group-listenerTimConversationList:', detail)
+      if (detail.code == 0 && detail.type == 'getConversationList') {
+        state.consversationList = detail.data
+      }
     }
 
     function changeConversation (element) {
@@ -107,11 +177,16 @@ export default defineComponent({
       // });
       eventEmitter.on('Relationship-Chain', listenerTimRelationshipChain)
       eventEmitter.on('Group', listenerTimGroupList)
-      props.timClinet.getFriendList()
+      eventEmitter.on('Conversation', listenerTimConversationList)
+      props.timClinet.getConversationList()
+      props.timClinet.getFriendGroupList()
       props.timClinet.getGroupList()
     })
 
     onBeforeUnmount(() => {
+      eventEmitter.off('Relationship-Chain', listenerTimRelationshipChain)
+      eventEmitter.off('Group', listenerTimGroupList)
+      eventEmitter.off('Conversation', listenerTimConversationList)
       // window.removeEventListener('mouseup', e => {
       //   _move = false
       // });
@@ -128,7 +203,8 @@ export default defineComponent({
               <div className={classes['title-info-detail-state']}><custom-icon name="online" />在线<custom-icon name="next" /></div>
             </div>
             <div style={{ flex: 1, position: "relative" }}>
-              <custom-icon name="add" style={{ position: 'absolute', right: '10px', cursor: 'pointer', top: '-7px' }} />
+              <custom-icon name="add" style={{ position: 'absolute', right: '10px', cursor: 'pointer', top: '-7px' }} onClick={openDialog} />
+
             </div>
           </div>
           <div className={classes['title-search']}>
@@ -140,30 +216,57 @@ export default defineComponent({
             }} />
           </div>
         </div>
-        <div className="zhanwei" style={{ height: '82px', width: '100%', 'flex-shrink': 0 }}></div>
-        {
-          state.groupList.map(element => {
-            return (
-              <div className={classes['group-item']}></div>
-            )
-          })
-        }
-        {
-          state.friendList.map(element => {
-            return (
-              <div className={classes['friend-item']} onClick={() => changeConversation(element)}>
-                <img src={imageList[0]}></img>
-                <div className={classes['friend-item-content']}>
-                  <div className={classes['friend-item-content-name']}>{element.remark}</div>
-                  <div className={classes['friend-item-content-text']}></div>
+        <div className={classes['message-list']} v-show={state.activeId == 1}>
+          {
+            state.consversationList.map(element => {
+              let payload = element.lastMessage.payload, info = null, lastMessage = element.lastMessage
+              if (lastMessage.type == 'TIMCustomElem') {
+                info = JSON.parse(JSON.parse(payload.data).data)
+              }
+              return (
+                <div className={classes['friend-item']} onClick={() => changeConversation(element)}>
+                  <img src={imageList[0]}></img>
+                  <div className={classes['friend-item-content']}>
+                    <div className={classes['friend-item-content-name']}>{element.remark}</div>
+                    <div className={classes['friend-item-content-text']}></div>
+                  </div>
+                  {/* <div className={classes['friend-item-right']}>
+                    <div className={classes['friend-item-right-time']}>{formatTime(element.lastMessage.lastTime)}</div>
+                  </div> */}
                 </div>
-                <div className={classes['friend-item-right']}>
-                  <div className={classes['friend-item-right-time']}>{element.profile.lastUpdatedTime == 0 ? formatTime(element.addTime) : formatTime(element.profile.lastUpdatedTime)}</div>
+              )
+            })
+          }
+        </div>
+        <div className={classes['contacts-list']} v-show={state.activeId == 2}>
+          <div className={classes['contacts-new-message']}>
+            <div className={classes['contacts-new-friend']}>新朋友</div>
+            <div className={classes['contacts-new-group']}>群通知</div>
+          </div>
+          <div className={classes['contacts-already-exists']}>
+            <div className={classes['contacts-select']}>
+              {
+                contactsSelect.map((element, index) => {
+                  return <div className={index == state.selectId ? classes['select-active'] : classes['select-item']} onClick={() => { changeSelect(element) }}>{element.name}</div>
+                })
+              }
+            </div>
+            <div className={classes['contacts-select-detail']}></div>
+          </div>
+        </div>
+        <div className={classes['action-bar']}>
+          {
+            state.actionBar.map(element => {
+              return (
+                <div className={classes['action-item']} onClick={() => changePage(element)}>
+                  <img src={'/src/assets/images/' + element.image + '.png'} alt="" srcset="" v-show={!element.active} />
+                  <img src={'/src/assets/images/' + element.image + '-active.png'} alt="" srcset="" v-show={element.active} />
+                  <p>{element.name}</p>
                 </div>
-              </div>
-            )
-          })
-        }
+              )
+            })
+          }
+        </div>
         {/* <div id="drag-line" className={classes['drag-line']} onMousedown={mouseDown} onMousemove={mouseMove} onMouseup={mouseUp}></div> */}
       </div>
     )

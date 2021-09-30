@@ -6,12 +6,13 @@
       <el-button @click="login" :disabled="state.login">登录</el-button>
     </div>
     <div class="cover" v-else>
-      <Group v-model:login="state.login" :timClinet="timClinet" />
+      <Group v-model:login="state.login" :timClinet="timClinet" @openModel="openModel" />
       <!-- <div id="drag-line" class="drag-line" @mousedown="mouseDown" @mousemove="mouseMove" @mouseup="mouseUp"></div> -->
       <!-- <el-button @click="call" v-if="state.login">拨打</el-button> -->
       <TimPage v-model:login="state.login" :timClinet="timClinet" />
       <VideoPopup v-model:show="state.show" :trtcclient="trtcclient" @join="join" @leave="leave" :acceptSuccessed="acceptSuccessed" :hanguped="hanguped"></VideoPopup>
     </div>
+    <ChatFunctionModel :visible="state.visible" />
   </div>
 </template>
 <script setup>
@@ -20,6 +21,7 @@ import timFriendShip from "./../modules/timFriendShip";
 import VideoPopup from "./modules/VideoPopup.vue";
 import TimPage from "../Tim/Tim.vue"
 import Group from "../Group/Group"
+import ChatFunctionModel from "../ChatFunctionModel/ChatFunctionModel.vue"
 import eventEmitter from "../../../plugin/bus";
 import useInstance from '../../../mixins/instance'
 import {
@@ -36,6 +38,7 @@ const state = reactive({
   login: false,
   tim: null,
   all: 0,
+  visible: false
 });
 
 const { $_mode } = useInstance()
@@ -93,26 +96,7 @@ function TIM_EVENT_SDK_READY () {
   }
 }
 
-onMounted(() => {
-  eventEmitter.on("login-success", loginSuccess);
-  eventEmitter.on("call-success", callSuccess);
-  eventEmitter.on("TIM_EVENT_SDK_READY", TIM_EVENT_SDK_READY);
-  // new trtcCalling({ SDKAppID: import.meta.env.VUE_APP_SDKAPPID })
 
-  // dragDom = document.getElementById('group-component')
-  // dragDom.style.width = '300px'
-  // window.addEventListener('mouseup', e => {
-  //   _move = false
-  // });
-});
-
-onBeforeUnmount(() => {
-  trtcclient.logoutClient();
-
-  // window.removeEventListener('mouseup', e => {
-  //   _move = false
-  // });
-});
 
 
 let _move = false, _x = 520, _y = 0;
@@ -136,6 +120,45 @@ function mouseMove (event) {
 function mouseUp (event) {
   _move = false
 }
+
+function openModel () {
+  state.visible = true
+  setTimeout(() => {
+    document.addEventListener('click', closeModel)
+  }, 100)
+}
+
+function closeModel (e) {
+  let b = document.getElementById('chat-function-model').contains(e.target)
+  if (!b) {
+    state.visible = false
+    document.removeEventListener('click', closeModel)
+  }
+}
+
+onMounted(() => {
+  eventEmitter.on("login-success", loginSuccess);
+  eventEmitter.on("call-success", callSuccess);
+  eventEmitter.on("TIM_EVENT_SDK_READY", TIM_EVENT_SDK_READY);
+  // new trtcCalling({ SDKAppID: import.meta.env.VUE_APP_SDKAPPID })
+
+  // dragDom = document.getElementById('group-component')
+  // dragDom.style.width = '300px'
+  // window.addEventListener('mouseup', e => {
+  //   _move = false
+  // });
+});
+
+onBeforeUnmount(() => {
+  trtcclient.logoutClient();
+  eventEmitter.off("login-success", loginSuccess);
+  eventEmitter.off("call-success", callSuccess);
+  eventEmitter.off("TIM_EVENT_SDK_READY", TIM_EVENT_SDK_READY);
+  document.removeEventListener('click', closeModel)
+  // window.removeEventListener('mouseup', e => {
+  //   _move = false
+  // });
+});
 </script>
 <style>
 #trtc-calling {
@@ -154,7 +177,6 @@ function mouseUp (event) {
   display: flex;
   align-items: center;
   flex-direction: column;
-  height: 100%;
   padding: 50px 30px;
 }
 

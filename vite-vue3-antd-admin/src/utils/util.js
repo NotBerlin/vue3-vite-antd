@@ -440,3 +440,8 @@ export function formatTime (timestamp) {
     return time2Str(timestamp)
   }
 }
+
+// 滚动元素到最上方或最下方
+export function scrollView(id, direction) {
+  document.getElementById(id).scrollIntoView(direction)
+}

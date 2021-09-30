@@ -2,7 +2,7 @@
  * @Author: dlAm 
  * @Date: 2021-09-29 10:00:58 
  * @Last Modified by: dlAm
- * @Last Modified time: 2021-09-29 18:43:02
+ * @Last Modified time: 2021-09-30 15:58:32
  * @Power:  封装tim实例
  * @Description:  
  */
@@ -16,6 +16,7 @@ export default class TimFriendClient {
     this.userID = ''
     this.userSig = ''
     this.coversationID = ''
+    this.to = ''
     this.createClient(options.SDKAppID);
   }
   /*
@@ -34,6 +35,8 @@ export default class TimFriendClient {
     this.handleUploadEvent()
   }
   loginClient (options) {
+    this.userID = options.userID
+    this.userSig = options.userSig
     let promise = this.timFriendClient.login({ userID: options.userID, userSig: options.userSig });
     promise.then(function (imResponse) {
       console.log(imResponse.data); // 登录成功
@@ -68,7 +71,7 @@ export default class TimFriendClient {
     // 发送文本消息，Web 端与小程序端相同
     // 1. 创建消息实例，接口返回的实例可以上屏
     let message = this.timFriendClient.createTextMessage({
-      to: options.to,
+      to: this.to,
       conversationType: TIM.TYPES.CONV_C2C,
       // 消息优先级，用于群聊（v2.4.2起支持）。如果某个群的消息超过了频率限制，后台会优先下发高优先级的消息，详细请参考：https://cloud.tencent.com/document/product/269/3663#.E6.B6.88.E6.81.AF.E4.BC.98.E5.85.88.E7.BA.A7.E4.B8.8E.E9.A2.91.E7.8E.87.E6.8E.A7.E5.88.B6)
       // 支持的枚举值：TIM.TYPES.MSG_PRIORITY_HIGH, TIM.TYPES.MSG_PRIORITY_NORMAL（默认）, TIM.TYPES.MSG_PRIORITY_LOW, TIM.TYPES.MSG_PRIORITY_LOWEST
@@ -84,9 +87,11 @@ export default class TimFriendClient {
     promise.then(function (imResponse) {
       // 发送成功
       console.log(imResponse);
+      eventEmitter.emit('Send-Message', { data: imResponse, code: 0, type: 'createTextMessage' })
     }).catch(function (imError) {
       // 发送失败
       console.warn('sendMessage error:', imError);
+      eventEmitter.emit('Send-Message', { data: imError, code: 1, type: 'createTextMessage' })
     });
   }
   createTextAtMessage (options) {
@@ -162,6 +167,45 @@ export default class TimFriendClient {
     }).catch(function (imError) {
       // 发送失败
       console.warn('sendMessage error:', imError);
+    });
+  }
+  /*
+    * @Author: dlAm
+    * @Date: 2021-09-29 10:00:58
+    * @Last Modified by:   dlAm
+    * @Last Modified time: 2021-09-29 10:00:58
+    * @Power:  tim会话
+    * @Description:
+    */
+  getMessageList (nextReqMessageID) {
+    // 下拉查看更多消息
+    let params = { conversationID: this.conversationID, count: 15 }
+    if (nextReqMessageID) params.nextReqMessageID = nextReqMessageID
+    let promise = this.timFriendClient.getMessageList(params);
+    promise.then(function (imResponse) {
+      const messageList = imResponse.data.messageList; // 消息列表。
+      const nextReqMessageID = imResponse.data.nextReqMessageID; // 用于续拉，分页续拉时需传入该字段。
+      const isCompleted = imResponse.data.isCompleted; // 表示是否已经拉完所有消息。
+      const data = {
+        messageList,
+        nextReqMessageID,
+        isCompleted
+      }
+      eventEmitter.emit('Conversation', { data, code: 0, type: 'getMessageList' })
+    }).catch(function (imError) {
+      console.warn('getMessageList error:', imError); // 获取会话列表失败的相关信息
+      eventEmitter.emit('Conversation', { data: imError, code: 1, type: 'getMessageList' })
+    });
+  }
+  getConversationList () {
+    // 拉取会话列表
+    let promise = this.timFriendClient.getConversationList();
+    promise.then(function (imResponse) {
+      const conversationList = imResponse.data.conversationList; // 会话列表，用该列表覆盖原有的会话列表
+      eventEmitter.emit('Conversation', { data: conversationList, code: 0, type: 'getConversationList' })
+    }).catch(function (imError) {
+      console.warn('getConversationList error:', imError); // 获取会话列表失败的相关信息
+      eventEmitter.emit('Conversation', { data: imError, code: 1, type: 'getConversationList' })
     });
   }
   /*
@@ -253,9 +297,11 @@ export default class TimFriendClient {
   getFriendGroupList () {
     let promise = this.timFriendClient.getFriendGroupList();
     promise.then(function (imResponse) {
-      const friendGroupList = event.data; // 好友分组列表
+      const friendGroupList = imResponse.data; // 好友分组列表
+      eventEmitter.emit('Relationship-Chain', { data: friendGroupList, code: 0, type: 'getFriendGroupList' })
     }).catch(function (imError) {
       console.warn('getFriendGroupList error:', imError); // 获取好友分组列表失败的相关信息
+      eventEmitter.emit('Relationship-Chain', { data: imError, code: 1, type: 'getFriendGroupList' })
     });
   }
   addToFriendGroup () {
@@ -366,10 +412,11 @@ export default class TimFriendClient {
     * @Power:  tim状态维护
     * @Description:自定义事件
     */
-   changeConversationID (options) {
-     debugger
-     eventEmitter.emit('Change-Conversation-ID', this.coversationID)
-   }
+  changeConversationID (options) {
+    this.conversationID = options.conversationID
+    this.to = options.userProfile.userID
+    eventEmitter.emit('Change-Conversation-ID', this.coversationID)
+  }
   /*
     * @Author: dlAm
     * @Date: 2021-09-29 10:00:58
