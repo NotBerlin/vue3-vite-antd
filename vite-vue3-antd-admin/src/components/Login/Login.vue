@@ -22,7 +22,7 @@ import { defineProps, reactive, defineEmits, useAttrs, useSlots, toRefs, ref, on
 import useInstance from '../../mixins/instance'
 import { getUuid } from '../../utils/consts'
 
-const { $bus, $route, $router, $store, $_http, $_API } = useInstance()
+const { $bus, $route, $router, $store, $_http, $_API, $_debounce } = useInstance()
 
 const form = reactive({
   account: '',
@@ -161,11 +161,13 @@ async function login () {
       id: '511xxxxxxxxxxxxx14'
     }
 
-    $store.commit('route/SET_ROUTES', arr)
-    $store.commit('user/SET_USER', userInfo)
-    $router.push({
-      path: '/home'
-    })
+    $_debounce(() => {
+      $store.commit('route/SET_ROUTES', arr)
+      $store.commit('user/SET_USER', userInfo)
+      $router.push({
+        path: '/home'
+      })
+    }, 300)()
   }
 }
 

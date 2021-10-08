@@ -31,5 +31,8 @@ export default defineComponent({
   left: 50%;
   transform: translate(-250px, -150px);
   background: white;
+  box-shadow: 2px 2px 2px 2px #eeeeee;
+  border-radius: 5px;
+  border: 1px solid #eeeeee;
 }
 </style>

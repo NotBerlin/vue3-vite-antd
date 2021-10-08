@@ -2,7 +2,7 @@
   <div id="trtc-calling">
     <div class="cover2" v-if="!state.login">
       userID<el-input v-model="state.userID" :disabled="state.login"></el-input>
-      remoteUserID<el-input v-model="state.remoteUserID" :disabled="state.login"></el-input>
+      <!-- remoteUserID<el-input v-model="state.remoteUserID" :disabled="state.login"></el-input> -->
       <el-button @click="login" :disabled="state.login">登录</el-button>
     </div>
     <div class="cover" v-else>
@@ -52,6 +52,7 @@ function call (options) {
 }
 
 function login () {
+  if (state.userID == '') return
   trtcclient.loginClient({
     userID: state.userID,
     userSig: state.userID === '123456' ?

@@ -6,11 +6,11 @@
         <template #dropdown>
           <el-dropdown-menu>
             <el-dropdown-item @click="logout">退出登录</el-dropdown-item>
-            <el-dropdown-item @click="editUserInfo">修改信息</el-dropdown-item>
+            <!-- <el-dropdown-item @click="editUserInfo">修改信息</el-dropdown-item> -->
           </el-dropdown-menu>
         </template>
       </el-dropdown>
-      <div class="user-info">
+      <div class="user-info" @click="userInfoFn">
         <img src="../../../assets/images/portrait.jpeg" alt="" srcset="">
         {{userInfo.name}}
       </div>
@@ -34,6 +34,12 @@ function logout () {
 
 function editUserInfo () { }
 
+function userInfoFn () {
+  $router.push({
+    path: '/user'
+  })
+}
+
 </script>
 <style>
 .el-header {
@@ -46,6 +52,7 @@ function editUserInfo () { }
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
 }
 
 .user-info > img {
