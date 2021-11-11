@@ -10,14 +10,14 @@ import {
   onMounted,
   watch,
   defineComponent,
-  onBeforeUnmount
+  onBeforeUnmount,
 } from "vue";
 
 export default defineComponent({
   props: {
     src: {
       type: String,
-      default: '',
+      default: "",
     },
     autoplay: {
       type: Boolean,
@@ -29,60 +29,67 @@ export default defineComponent({
     },
     controls: {
       type: String,
-      default: ''
+      default: "",
+    },
+  },
+  components: {},
+  setup(props, context) {
+    let state = reactive({});
+
+    let audio = null;
+
+    watch(state, (val) => {});
+
+    function endPlay() {
+      context.emit("play-end", {
+        code: 0,
+        msg: "播放完成",
+        data: {},
+      });
     }
-  },
-  components: {
-  },
-  setup (props, context) {
-    let state = reactive({
-    })
 
-    let audio = null
-
-    watch(state, (val) => {
-    })
-
-    function play () {
-      if (props.src != '') {
-        audio.play().then(res => {
-        }).catch(err => {
-        }).finally(f => {
-          context.emit('play-f', {
-            code: 0,
-            msg: '播放点击操作结束',
-            data: {
-            }
-          })
-        })
+    function play() {
+      if (props.src != "") {
+        audio
+          .play()
+          .then((res) => {})
+          .catch((err) => {})
+          .finally((f) => {
+            context.emit("play-f", {
+              code: 0,
+              msg: "播放点击操作结束",
+              data: {},
+            });
+          });
       }
     }
 
-    function pause () {
-      if (props.src != '') {
-        audio.pause()
-        context.emit('pause-f', {
+    function pause() {
+      if (props.src != "") {
+        audio.pause();
+        context.emit("pause-f", {
           code: 0,
-          msg: '暂停点击操作结束',
-          data: {
-          }
-        })
+          msg: "暂停点击操作结束",
+          data: {},
+        });
       }
     }
 
     onMounted(() => {
-      audio = document.getElementById('cll-audio')
-    })
+      audio = document.getElementById("cll-audio");
+      audio.addEventListener("ended", endPlay, false);
+    });
 
     onBeforeUnmount(() => {
-    })
+      audio.removeEventListener("ended", endPlay, false);
+    });
 
     return {
       play,
       pause,
-    }
-  }
-})
+    };
+  },
+});
 </script>
 
 

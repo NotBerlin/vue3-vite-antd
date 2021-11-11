@@ -5,15 +5,21 @@
         <music-item v-for="(item, index) in musicList" :key="item.playUrl + index" :options="item" :index="index" :currentPlay="currentPlay" @playHere="playHere" :disabled="checkoutDisabled" />
       </div>
       <div class="control-btn-group">
+        <div @click="prePlay" class="btn play-btn">
+          上一首
+        </div>
         <div @click="play" v-show="!playing" class="btn play-btn">
           <img src="../../../assets/images/play-icon.png" alt="" srcset="">
         </div>
         <div @click="pause" v-show="playing" class="btn play-btn">
           <img src="../../../assets/images/pause-icon.png" alt="" srcset="">
         </div>
+        <div @click="nextPlay" class="btn play-btn">
+          下一首
+        </div>
       </div>
     </div>
-    <audio-controller :src="playUrl" :autoplay="true" class="audio-component" ref="audioComponent" @play-f="playFinally" @pause-f="pauseFinally" />
+    <audio-controller :src="playUrl" :autoplay="true" class="audio-component" ref="audioComponent" @play-f="playFinally" @pause-f="pauseFinally" @play-end="playEnd" />
   </div>
 </template>
 
@@ -46,6 +52,7 @@ export default defineComponent({
       playUrl: '',
       playing: false,
       currentPlay: '',
+      mode: 'iteration'
     })
 
     watch(state, (val) => {
@@ -53,7 +60,24 @@ export default defineComponent({
 
     const audioComponent = ref(null)
 
-    function setCurrentPlay () { }
+    let nextMusic = ''
+    let preMusic = []
+
+    function getNextPlay () {
+      let currentMusicIndex = 0
+      state.musicList.forEach((element, index) => {
+        if (element.playUrl == state.currentPlay) {
+          currentMusicIndex = index
+        }
+      })
+      switch (state.mode) {
+        case 'iteration':
+          nextMusic = state.musicList[currentMusicIndex + 1].playUrl;
+          break;
+        default:
+          break;
+      }
+    }
 
     function play () {
       if (state.playUrl == '') {
@@ -62,8 +86,12 @@ export default defineComponent({
       } else {
         state.currentPlay = state.playUrl
       }
+      if (preMusic[preMusic.length - 1] != state.playUrl) {
+        preMusic.push(state.playUrl)
+      }
       nextTick(() => {
         audioComponent.value.play()
+        getNextPlay()
       })
     }
 
@@ -93,6 +121,28 @@ export default defineComponent({
       }
     }
 
+    function playEnd (event) {
+      if (event.code == 0) {
+        state.playing = false
+        state.playUrl = nextMusic
+        play()
+      }
+    }
+
+    function prePlay () {
+      if (preMusic.length == 0) return false
+      state.playing = false
+      preMusic.pop()
+      state.playUrl = preMusic.pop()
+      play()
+    }
+
+    function nextPlay () {
+      state.playing = false
+      state.playUrl = nextMusic
+      play()
+    }
+
     onMounted(() => {
       state.musicList = musicList.all
     })
@@ -107,7 +157,10 @@ export default defineComponent({
       playHere,
       audioComponent,
       playFinally,
-      pauseFinally
+      pauseFinally,
+      playEnd,
+      prePlay,
+      nextPlay
     }
   }
 })
