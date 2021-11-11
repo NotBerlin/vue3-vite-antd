@@ -2,6 +2,12 @@
   <div>
     天气： {{java.weather}}
     颜色： {{java.color}}
+    <video id="video1" class="video-js vjs-default-skin" width="640" height="480" data-setup='{"controls" : true, "autoplay" : true, "preload" : "auto"}'>
+      <source src="http://1259045199.vod2.myqcloud.com/61828e4fvodcq1259045199/9f12dc323701925925598196138/f0.flv" type="video/x-flv">
+    </video>
+    <video src="http://1259045199.vod2.myqcloud.com/61828e4fvodcq1259045199/9f12dc323701925925598196138/f0.flv" controls="controls">
+      您的浏览器不支持 video 标签。
+    </video>
   </div>
 </template>
 
@@ -122,7 +128,7 @@ export default {
       }
     }
 
-    function postDatabase1() {
+    function postDatabase1 () {
       let params = {
         name: '老陈',
         money: 5000

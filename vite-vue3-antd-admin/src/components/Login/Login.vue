@@ -154,6 +154,18 @@ async function login () {
           },
         ]
       },
+      {
+        name: '音乐',
+        id: getUuid('Music-'),
+        icon: 'chat.png',
+        sections: [
+          {
+            name: 'Migu',
+            id: getUuid('Migu-'),
+            path: '/music/mi-gu'
+          },
+        ]
+      },
     ]
 
     const userInfo = {
