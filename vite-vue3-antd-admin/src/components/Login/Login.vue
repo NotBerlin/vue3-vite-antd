@@ -157,7 +157,7 @@ async function login () {
       {
         name: '音乐',
         id: getUuid('Music-'),
-        icon: 'chat.png',
+        icon: 'music.png',
         sections: [
           {
             name: 'Migu',
