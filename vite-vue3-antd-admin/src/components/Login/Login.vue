@@ -193,6 +193,7 @@ const rules = {
 
 onMounted(() => {
   $store.commit('tag/CLEAR_TAGS')
+  $store.commit('tag/CLEAR_CACHEVIEWS')
   $store.commit('route/SET_ROUTES', [])
   $store.commit('user/SET_USER', {})
 })

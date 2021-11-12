@@ -12,10 +12,23 @@ const state = {
     meta: {
       title: '首页'
     }
-  }
+  },
+  cacheViews: []
 }
 
 const mutations = {
+  SET_CACHEVIEWS: (state, tag) => {
+    if (state.cacheViews.includes(tag.name)) return false
+    state.cacheViews.push(tag.name)
+  },
+  REMOVE_CACHEVIEWS: (state, tag) => {
+    let index = state.cacheViews.indexOf(tag.name)
+    if (index == -1) return false
+    state.cacheViews.pop(index)
+  },
+  CLEAR_CACHEVIEWS: (state) => {
+    state.cacheViews = []
+  },
   SET_TAGS: (state, tag) => {
     if (tag.fullPath === '') return false
     if (tag.fullPath !== '/home') {

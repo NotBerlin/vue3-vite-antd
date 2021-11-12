@@ -1,8 +1,8 @@
 <template>
   <div id="mi-gu">
-    <div>
+    <div style="height: calc(100% - 80px)">
       <div class="music-list">
-        <music-item v-for="(item, index) in musicList" :key="item.playUrl + index" :options="item" :index="index" :currentPlay="currentPlay" @playHere="playHere" :disabled="checkoutDisabled" />
+        <music-item v-for="(item, index) in musicList" :key="item.playUrl" :options="item" :index="index" :currentPlay="currentPlay" @playHere="playHere" :disabled="checkoutDisabled" />
       </div>
       <div class="control-btn-group">
         <div @click="prePlay" class="btn play-btn">
@@ -20,6 +20,7 @@
       </div>
     </div>
     <audio-controller :src="playUrl" :autoplay="true" class="audio-component" ref="audioComponent" @play-f="playFinally" @pause-f="pauseFinally" @play-end="playEnd" />
+    <!-- <audio-component :visible="audioVisible" @update:visible="audioVisible = $event" /> -->
   </div>
 </template>
 
@@ -32,18 +33,23 @@ import {
   defineComponent,
   onBeforeUnmount,
   toRefs,
-  nextTick
+  nextTick,
+  onActivated,
+  onDeactivated
 } from "vue";
 import AudioController from "../modules/AudioController.vue"
+// import AudioComponent from "../AudioComponent/index.vue"
 import MusicItem from "../modules/MusicItem.vue"
 import musicList from "./modules/musicList"
 
 export default defineComponent({
+  name: 'mi-gu',
   props: {
   },
   components: {
     AudioController,
-    MusicItem
+    MusicItem,
+    // AudioComponent
   },
   setup (props) {
     let state = reactive({
@@ -52,7 +58,8 @@ export default defineComponent({
       playUrl: '',
       playing: false,
       currentPlay: '',
-      mode: 'iteration'
+      mode: 'iteration',
+      audioVisible: false,
     })
 
     watch(state, (val) => {
@@ -143,6 +150,14 @@ export default defineComponent({
       play()
     }
 
+    onActivated(() => {
+      // state.audioVisible = false
+    })
+
+    onDeactivated(() => {
+      // state.audioVisible = true
+    })
+
     onMounted(() => {
       state.musicList = musicList.all
     })
@@ -183,8 +198,7 @@ export default defineComponent({
 .music-list {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  height: calc(100% - 80px);
+  height: 100%;
   overflow: auto;
 }
 

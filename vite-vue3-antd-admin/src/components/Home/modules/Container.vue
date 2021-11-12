@@ -6,7 +6,21 @@
       <el-main>
         <Tag />
 
-        <router-view class="content"></router-view>
+        <!-- vue3 keep-alive缓存 -->
+        <transition name="fade-transform" mode="out-in">
+          <router-view v-slot="{ Component }">
+            <keep-alive :include="cachedViews">
+              <component :is="Component" class="content"></component>
+            </keep-alive>
+          </router-view>
+        </transition>
+
+        <!-- vue2 keep-alive缓存 -->
+        <!-- <transition name="fade-transform" mode="out-in">
+          <keep-alive :include="cachedViews">
+            <router-view class="content"></router-view>
+          </keep-alive>
+        </transition> -->
       </el-main>
     </el-container>
   </div>
@@ -15,6 +29,12 @@
 import { defineProps, reactive, defineEmits, useAttrs, useSlots } from 'vue'
 import Header from './Header.vue'
 import Tag from './Tag.vue'
+import useInstance from '../../../mixins/instance'
+
+const { $store } = useInstance()
+console.log($store.state)
+
+const cachedViews = $store.state.cacheViews
 
 </script>
 <style>
@@ -26,7 +46,7 @@ import Tag from './Tag.vue'
 
 .el-container {
   height: calc(100% - 60px);
-  background: #F6F6F6;
+  background: #f6f6f6;
 }
 
 .content {

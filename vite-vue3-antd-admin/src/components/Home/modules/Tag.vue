@@ -26,6 +26,7 @@ let currentUrl = computed(() => $store.state.tag.currentTag)
 
 function handleClose (tag) {
   $store.commit('tag/REMOVE_TAG', tag)
+  $store.commit('tag/REMOVE_CACHEVIEWS', tag)
   if (tag.fullPath === currentUrl.value.fullPath) {
     $router.push({
       path: tags[tags.length - 1].fullPath

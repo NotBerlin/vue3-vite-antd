@@ -1,7 +1,7 @@
 export default [
   {
     path: '/music/mi-gu',
-    name: 'Migu',
+    name: 'mi-gu',
     meta: {
       title: '咪咕音乐',
     },

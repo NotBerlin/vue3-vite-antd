@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from "vue-router";
+import { createRouter, createWebHistory, createWebHashHistory } from "vue-router";
 import store from "../store";
 
 const routes = []
@@ -50,6 +50,7 @@ router.beforeEach((to, from, next) => {
     } else {
         document.title = to.meta.title
         store.commit('tag/SET_TAGS', to)
+        store.commit('tag/SET_CACHEVIEWS', to)
         store.commit('tag/SET_CURRENT_TAG', to)
     }
     next()

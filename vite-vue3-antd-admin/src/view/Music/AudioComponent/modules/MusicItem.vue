@@ -1,7 +1,7 @@
 <template>
   <div id="musci-item" :class="[currentPlay == options.playUrl ? 'current-play' : '']">
     <div class="img-cover">
-      <img src="../../../assets/images/music-active.png" alt="" srcset="" class="current-active" v-show="currentPlay == options.playUrl">
+      <img src="../../../../assets/images/music-active.png" alt="" srcset="" class="current-active" v-show="currentPlay == options.playUrl">
     </div>
     <div class="serial-number">{{index < 10 ? '0' + index : index}}</div>
     <div :class="[disabled ? 'disabled-item music-name' : 'music-name']"><span @click="playHere" style="cursor: pointer;">{{options.musicName}}</span></div>
@@ -72,6 +72,8 @@ export default defineComponent({
 #musci-item {
   display: flex;
   align-items: center;
+  font-size: 12px;
+  margin-bottom: 8px;
 }
 
 .music-name {
@@ -84,16 +86,16 @@ export default defineComponent({
 }
 
 .serial-number {
-  margin-left: 10px;
-  width: 50px;
+  margin-left: 5px;
+  width: 30px;
 }
 
 .music-songer {
-  margin-right: 30px;
+  margin-right: 10px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  width: 15%;
+  width: 20%;
 }
 
 .current-play {
@@ -110,7 +112,7 @@ export default defineComponent({
 
 .current-active {
   margin-left: 5px;
-  height: 16px;
+  height: 12px;
   -webkit-animation: spin 1s linear 1s 5 alternate;
   animation: spin 1s linear infinite;
 }

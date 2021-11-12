@@ -5,6 +5,7 @@ function close () {
   let tag = tags[tags.length - 1]
   let next = tags[tags.length - 2]
   this.$store.commit('tag/REMOVE_TAG', tag)
+  this.$store.commit('tag/REMOVE_CACHEVIEWS', tag)
   this.$router.push({
     path: next.fullPath
   })
