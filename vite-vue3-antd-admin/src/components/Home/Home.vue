@@ -18,6 +18,10 @@ import { onMounted } from 'vue'
 
 let audioVisible = ref(false)
 let audioPlaying = ref(false)
+let audioStyle = reactive({
+  background: 'rgba(233, 30, 99, 0.25)',
+  listColor: 'rgba(0, 0, 0, 1)'
+})
 let audioComponentRef = ref(null)
 
 watch(audioVisible, (value) => {
@@ -36,11 +40,17 @@ function setPlaying (event) {
   audioPlaying.value = event
 }
 
+function setAudioStyle (event) {
+  audioStyle = event
+}
+
 provide('audioController', {
   state: audioVisible,
   playing: audioPlaying,
+  audioStyle,
   setState,
-  setPlaying
+  setPlaying,
+  setAudioStyle,
 })
 
 onMounted(() => {

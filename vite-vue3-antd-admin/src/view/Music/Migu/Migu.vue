@@ -43,7 +43,6 @@ import MusicItem from "../modules/MusicItem.vue"
 import musicList from "./modules/musicList"
 
 export default defineComponent({
-  name: 'mi-gu',
   props: {
   },
   components: {

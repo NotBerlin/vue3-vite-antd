@@ -58,6 +58,7 @@ import {
 import AudioController from "./modules/AudioController.vue"
 import MusicItem from "./modules/MusicItem.vue"
 import musicList from "../Migu/modules/musicList"
+import useInstance from '../../../mixins/instance'
 
 export default defineComponent({
   props: {
@@ -71,6 +72,7 @@ export default defineComponent({
     MusicItem
   },
   setup (props, context) {
+    const { $router } = useInstance()
     let audioController = inject('audioController')
 
     let state = reactive({
@@ -86,7 +88,21 @@ export default defineComponent({
       audioController.setPlaying(val)
     })
 
+    watch(audioController.audioStyle, (val) => {
+      Object.keys(val).forEach((element) => {
+        switch (element) {
+          case 'listColor':
+            audioComponentDiv.children[1].firstElementChild.style.color = val[element];
+            break;
+          default:
+            audioComponentDiv.style[element] = val[element];
+            break;
+        }
+      })
+    })
+
     const audioComponent = ref(null)
+    let audioComponentDiv = null
 
     let nextMusic = ''
     let preMusic = []
@@ -188,7 +204,7 @@ export default defineComponent({
     }
 
     function move (e) {
-      let odiv = document.getElementById('audio-component');        //获取目标元素
+      let odiv = audioComponentDiv;        //获取目标元素
 
       //算出鼠标相对元素的位置
       let disX = e.clientX - odiv.offsetLeft;
@@ -230,7 +246,11 @@ export default defineComponent({
       }
     }
 
-    function setUp () { }
+    function setUp () {
+      $router.push({
+        path: '/system/set-up'
+      })
+    }
 
     onActivated(() => {
     })
@@ -240,6 +260,7 @@ export default defineComponent({
 
     onMounted(() => {
       state.musicList = musicList.all
+      audioComponentDiv = document.getElementById('audio-component')
     })
 
     onBeforeUnmount(() => {
