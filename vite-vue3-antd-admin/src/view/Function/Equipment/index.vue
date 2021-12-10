@@ -16,7 +16,7 @@
   </div>
 </template>
 <script>
-import { defineComponent, onMounted, reactive, ref, toRefs } from 'vue'
+import { defineComponent, onBeforeMount, onBeforeUnmount, onUnmounted } from 'vue'
 import equipment from './modules/equipment'
 export default defineComponent({
   name: 'Equipment',
@@ -52,6 +52,11 @@ export default defineComponent({
         imageID: 'local-photo'
       })
     }
+
+    onBeforeUnmount(() => {
+      stopVideo()
+    })
+
     return { getVideoJurisdiction, getAudioJurisdiction, startShooting, stopVideoShooting, photographSave, photographShow }
   },
 })

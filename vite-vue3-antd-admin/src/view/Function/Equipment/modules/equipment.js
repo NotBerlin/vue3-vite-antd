@@ -74,7 +74,7 @@ function openVideo (playConfig = {
       });
     }
   }
-  if (!playConfig.audio || typeof playConfig.audio != 'boolean') {
+  if (playConfig.audio == undefined || typeof playConfig.audio != 'boolean') {
     alert('playConfig.audio is undefined!!')
     return false
   }

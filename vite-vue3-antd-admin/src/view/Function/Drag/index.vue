@@ -75,8 +75,6 @@ export default defineComponent({
     }
 
     onMounted(() => {
-      box.value.style.left = "0px";
-      box.value.style.top = "0px";
       setTimeout(function () {
         moveImg();
       }, 10);
