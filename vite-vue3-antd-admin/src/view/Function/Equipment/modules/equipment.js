@@ -39,7 +39,10 @@ function openAudio () {
     // this.$mediaRecorder = mediaRecorder;
     // // 录制开始
     // mediaRecorder.start();
-  }, () => {
+  }, (err) => {
+    if (err.name == 'NotFoundError') {
+      alert(err.name + ": " + err.message)
+    }
     console.log('打开失败!');
   });
 }
@@ -74,7 +77,7 @@ function openVideo (playConfig = {
       });
     }
   }
-  if (!playConfig.audio || typeof playConfig.audio != 'boolean') {
+  if (playConfig.audio == 'undefined' || typeof playConfig.audio != 'boolean') {
     alert('playConfig.audio is undefined!!')
     return false
   }
@@ -131,6 +134,9 @@ function openVideo (playConfig = {
 
     })
     .catch(function (err) {
+      if (err.name == 'NotFoundError') {
+        alert(err.name + ": " + err.message)
+      }
       console.log(err.name + ": " + err.message);
     });
 }
