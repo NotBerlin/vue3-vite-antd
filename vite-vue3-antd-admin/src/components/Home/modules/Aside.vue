@@ -25,8 +25,8 @@ function handleNav (sectionItem) {
 }
 
 function getSrc (icon) {
-  const path = `../../../assets/images/${icon}`;
-  const modules = import.meta.globEager("../../../assets/images/*.*");
+  const path = `../../../assets/images/nav/${icon}`;
+  const modules = import.meta.globEager("../../../assets/images/nav/*.*");
   return modules[path].default;
 }
 </script>

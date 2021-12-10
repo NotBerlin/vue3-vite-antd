@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>camera</title>
+  <style>
+    #camera {
+      float: left;
+      margin: 20px;
+    }
+
+    #contentHolder {
+      width: 300px;
+      height: 300px;
+      margin-bottom: 10px;
+    }
+
+    #btn_snap {
+      margin: 0 auto;
+      border: 1px solid #f0f0f0;
+      background: #5CACEE;
+      color: #FFF;
+      width: 100px;
+      height: 36px;
+      line-height: 36px;
+      border-radius: 8px;
+      text-align: center;
+      cursor: pointer;
+      cursor: pointer;
+      /*禁止选择*/
+      -webkit-touch-callout: none;
+      /* iOS Safari */
+      -webkit-user-select: none;
+      /* Chrome/Safari/Opera */
+      -khtml-user-select: none;
+      /* Konqueror */
+      -moz-user-select: none;
+      /* Firefox */
+      -ms-user-select: none;
+      /* Internet Explorer/Edge */
+      user-select: none;
+      /* Non-prefixed version, currently not supported by any browser */
+    }
+
+    #imgBoxxx {
+      width: 200px;
+      margin: 60px 20px 20px;
+      /* border-radius: 50%; */
+    }
+  </style>
+</head>
+
+<body>
+  <div id="camera">
+    <div id="contentHolder">
+      <video id="video" width="300" height="300" autoplay></video>
+      <canvas style="display:none;" id="canvas" width="300" height="300"></canvas>
+    </div>
+    <div id="btn_snap" onclick="myfunction()">拍照</div>
+  </div>
+
+  <script>
+    var canvas = document.getElementById("canvas"),
+      pzBtn = document.getElementById("btn_snap"),
+      context = canvas.getContext("2d"),
+      video = document.getElementById("video");
+    var mediaVideo = null, mediaAduio = null
+    // alert('该页面会调用您的摄像头')
+
+    function stopVideo () {
+      mediaVideo.getTracks()[0].stop();
+    }
+
+    function stopAudio () {
+      mediaAduio.getTracks()[0].stop();
+    }
+
+
+    // 视频
+    // 旧版本浏览器可能根本不支持mediaDevices，我们首先设置一个空对象
+    if (navigator.mediaDevices === undefined) {
+      navigator.mediaDevices = {};
+    }
+    // 一些浏览器实现了部分mediaDevices，我们不能只分配一个对象
+    // 使用getUserMedia，因为它会覆盖现有的属性。
+    // 这里，如果缺少getUserMedia属性，就添加它。
+    if (navigator.mediaDevices.getUserMedia === undefined) {
+      navigator.mediaDevices.getUserMedia = function (constraints) {
+        // 首先获取现存的getUserMedia(如果存在)
+        var getUserMedia = navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+        // 有些浏览器不支持，会返回错误信息
+        // 保持接口一致
+        if (!getUserMedia) {
+          return Promise.reject(new Error('getUserMedia is not implemented in this browser'));
+        }
+        //否则，使用Promise将调用包装到旧的navigator.getUserMedia
+        return new Promise(function (resolve, reject) {
+          getUserMedia.call(navigator, constraints, resolve, reject);
+        });
+      }
+    }
+    var constraints = {
+      audio: false,
+      video: {
+        width: 720,
+        height: 720
+      }
+    }
+    navigator.mediaDevices.getUserMedia(constraints)
+      .then(function (stream) {
+        mediaVideo = stream
+        stopVideo()
+        // var video = document.querySelector('video');
+        // // 旧的浏览器可能没有srcObject
+        // if ("srcObject" in video) {
+        //   video.srcObject = stream;
+        // } else {
+        //   //避免在新的浏览器中使用它，因为它正在被弃用。
+        //   video.src = window.URL.createObjectURL(stream);
+        // }
+        // video.onloadedmetadata = function (e) {
+        //   video.play();
+        // };
+      })
+      .catch(function (err) {
+        console.log(err.name + ": " + err.message);
+      });
+    function myfunction() {
+      var date = new Date().getTime();
+      // 点击，canvas画图
+      context.drawImage(video, 0, 0, 300, 300);
+      // 获取图片base64链接
+      var image = canvas.toDataURL('image/png');
+      // 定义一个img
+      var img = new Image();
+      //设置属性和src
+      img.id = "imgBox";
+      img.src = image;
+      //将图片添加到页面中
+      document.body.appendChild(img);
+      // base64转文件
+      function dataURLtoFile(dataurl, filename) {
+        var arr = dataurl.split(','),
+          mime = arr[0].match(/:(.*?);/)[1],
+          bstr = atob(arr[1]),
+          n = bstr.length,
+          u8arr = new Uint8Array(n);
+        while (n--) {
+          u8arr[n] = bstr.charCodeAt(n);
+        }
+        return new File([u8arr], filename, {
+          type: mime
+        });
+      }
+      console.log(date);
+      console.log(dataURLtoFile(image, date + '.png'));
+    };
+    // 停止之前的录制内容
+    this.$mediaRecorder && this.$mediaRecorder.stop();
+    if (!window.AudioContext) {
+      window.AudioContext = window.AudioContext || window.webkitAudioContext || window.mozAudioContext || window.msAudioContext;
+    }
+    // 参考 https://developer.mozilla.org/zh-CN/docs/Web/API/MediaDevices/getUserMedia
+    // 老版浏览器可能根本没有实现mediaDevices, 为其设置一个空对象
+    if (!navigator.mediaDevices) {
+      navigator.mediaDevices = {};
+    }
+    if (!navigator.mediaDevices.getUserMedia) {
+      navigator.mediaDevices.getUserMedia = function (constraints) {
+        let getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+        // 浏览器不支持
+        if (!getUserMedia) {
+          return Promise.reject(new Error('您的浏览器暂不支持 getUserMedia !'));
+        }
+        // 包装老版 getUserMedia
+        return new Promise((resolve, reject) => getUserMedia.call(navigator, constraints, resolve, reject));
+      }
+    }
+
+
+
+    // 参数
+    // let constraints = {audio: true, video: true}; // 请求不带任何参数的音频和视频
+    // 请求音频
+    let constraintsVideo = { audio: true };
+    let mediaStream = navigator.mediaDevices.getUserMedia(constraintsVideo);
+    mediaStream.then((stream) => {
+      mediaAduio = stream
+      stopAudio()
+      // console.info('打开成功!')
+      // let audioContext = new AudioContext();
+      // // 创建一个新的音视频对象
+      // let destination = audioContext.createMediaStreamDestination();
+      // // 创建音视频源
+      // let mediaStreamSource = audioContext.createMediaStreamSource(stream);
+      // // 将音视频源 链接 到新音视频对象 中
+      // mediaStreamSource.connect(destination);
+      // // 媒体录制接口
+      // let mediaRecorder = new MediaRecorder(destination.stream, { audioBitsPerSecond: 16000 });
+      // let chunks = [];
+      // // 有可用数据流时触发，e.data即需要的音视频数据
+      // mediaRecorder.ondataavailable = (e) => chunks.push(e.data);
+      // // 间视频录制结束时触发
+      // mediaRecorder.onstop = () => {
+      //   // 通过Blob数据块, 合成完整的Blob块数据
+      //   let blob = new Blob(chunks, { 'type': 'audio/mpeg' });
+      //   // 通过Blob合建对象URL本地地址
+      //   let url = URL.createObjectURL(blob);
+      //   // 绑定到 audio 元素上
+      //   this.$refs.recordPlayer.src = url;
+      // };
+      // // 將 mediaRecorder 对象扔到全局this中, 用于其他方法调用
+      // this.$mediaRecorder = mediaRecorder;
+      // // 录制开始
+      // mediaRecorder.start();
+    }, () => {
+      console.log('打开失败!');
+    });
+  </script>
+</body>
+
+</html>

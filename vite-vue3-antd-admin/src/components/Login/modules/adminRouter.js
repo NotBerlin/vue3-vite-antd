@@ -111,6 +111,23 @@ export default [
     ]
   },
   {
+    name: '实用小功能',
+    id: getUuid('Function-'),
+    icon: 'function.png',
+    sections: [
+      {
+        name: '拖拽功能',
+        id: getUuid('Drag-'),
+        path: '/function/drag'
+      },
+      {
+        name: '浏览器设备',
+        id: getUuid('Equipment-'),
+        path: '/function/equipment'
+      },
+    ]
+  },
+  {
     name: '系统',
     id: getUuid('System-'),
     icon: 'system-set-up.png',

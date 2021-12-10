@@ -88,6 +88,7 @@ export default defineComponent({
     }
 
     function onSubmit () {
+      debugger
       console.log(state.textarea)
       props.timClinet.createTextMessage({ text: state.textarea })
     }
