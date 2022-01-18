@@ -15,4 +15,12 @@ export default [
     },
     component: () => import('../../view/Function/Equipment/index.vue'),
   },
+  {
+    path: '/function/faceRecognition',
+    name: 'FaceRecognition',
+    meta: {
+      title: '浏览器设备',
+    },
+    component: () => import('../../view/Function/FaceRecognition/index.vue'),
+  },
 ]

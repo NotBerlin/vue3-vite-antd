@@ -18,6 +18,10 @@
 <script>
 import { defineComponent, onBeforeMount, onBeforeUnmount, onUnmounted } from 'vue'
 import equipment from './modules/equipment'
+import "./../FaceRecognition/modules/tracking-min.js"
+import "./../FaceRecognition/modules/data/face-min.js"
+import "./../FaceRecognition/modules/data/eye-min.js"
+import "./../FaceRecognition/modules/data/mouth-min.js"
 export default defineComponent({
   name: 'Equipment',
   setup () {
@@ -51,6 +55,26 @@ export default defineComponent({
         show: true,
         imageID: 'local-photo'
       })
+      setTimeout(() => {
+        var tracker = new tracking.ObjectTracker(['face', 'eye', 'mouth']);
+        tracker.setStepSize(1.7);
+        tracking.track('#img', tracker);
+        tracker.on('track', function (event) {
+          event.data.forEach(function (rect) {
+            window.plot(rect.x, rect.y, rect.width, rect.height);
+          });
+        });
+
+        window.plot = function (x, y, w, h) {
+          var rect = document.createElement('div');
+          document.querySelector('.local-photo').appendChild(rect);
+          rect.classList.add('rect');
+          rect.style.width = w + 'px';
+          rect.style.height = h + 'px';
+          rect.style.left = (img.offsetLeft + x) + 'px';
+          rect.style.top = (img.offsetTop + y) + 'px';
+        };
+      }, 500)
     }
 
     onBeforeUnmount(() => {
@@ -86,5 +110,11 @@ export default defineComponent({
 .local-photo {
   height: 400px;
   width: 400px;
+}
+.rect {
+  border: 2px solid #a64ceb;
+  left: -1000px;
+  position: absolute;
+  top: -1000px;
 }
 </style>

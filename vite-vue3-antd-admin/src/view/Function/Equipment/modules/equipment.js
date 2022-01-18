@@ -211,6 +211,7 @@ function photograph (photographConfig = {
         var img = new Image();
         //设置属性和src
         img.src = image;
+        img.id = 'img'
         imageCover.appendChild(img);
       } else {
         imageDom.src = image;

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title></title>
+</head>
+
+<body>
+  <button onclick="play()" style="width: 150px;height: 52px;">文字转语音</button>
+  <script>
+    var msg = new SpeechSynthesisUtterance();
+    msg.text = "我是SummerGao";
+    msg.lang = 'zh'; //汉语
+    msg.volume = 50; // 声音的音量
+    msg.rate = 0.7; //语速，数值，默认值是1，范围是0.1到10
+    msg.pitch = 0.8; // 表示说话的音高，数值，范围从0（最小）到2（最大）。默认值为1
+    function play() {
+      speechSynthesis.speak(msg);
+    }
+  </script>
+</body>
+
+</html>

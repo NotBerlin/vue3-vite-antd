@@ -125,6 +125,11 @@ export default [
         id: getUuid('Equipment-'),
         path: '/function/equipment'
       },
+      {
+        name: '人脸识别',
+        id: getUuid('FaceRecognition-'),
+        path: '/function/faceRecognition'
+      },
     ]
   },
   {
