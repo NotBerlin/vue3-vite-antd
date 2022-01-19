@@ -14,6 +14,14 @@
 <script src="./modules/typescript.js">
 </script>
 <script>
-  debugger
+  window.onload = function () {
+    window.addEventListener('message', function (e) {
+      if (e.source != window.parent)
+        return;
+      console.log(e.data); // 打印值
+    }, false);
+    window.parent.postMessage('要传入的值', '*'); // 将值传入父组件
+  }
 </script>
+
 </html>
