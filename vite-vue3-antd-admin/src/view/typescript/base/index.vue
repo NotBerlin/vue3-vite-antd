@@ -1,5 +1,8 @@
 <template>
-  <div></div>
+  <div>
+    <iframe src="http://127.0.0.1:3000/typescript/base.html" class="iframe">
+    </iframe>
+  </div>
 </template>
 
 <script>
@@ -11,3 +14,10 @@ export default defineComponent({
   }
 })
 </script>
+
+<style scoped>
+.iframe {
+  height: 99%;
+  width: 99%;
+}
+</style>
