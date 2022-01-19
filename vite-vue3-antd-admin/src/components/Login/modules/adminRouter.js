@@ -133,6 +133,18 @@ export default [
     ]
   },
   {
+    name: 'TS小剧场',
+    id: getUuid('Typescript-'),
+    icon: 'typescript.png',
+    sections: [
+      {
+        name: '基础',
+        id: getUuid('Typescript-'),
+        path: '/typescript/base'
+      },
+    ]
+  },
+  {
     name: '系统',
     id: getUuid('System-'),
     icon: 'system-set-up.png',
