@@ -1,3 +1,13 @@
+var line = 'abc';
+if (line.length == 0) {
+    console.log('00000000');
+}
+for (var i = 0; i < line.length; i += 8) {
+    var str = line.substr(i, 8);
+    var full0 = new Array(8 - str.length).fill('0');
+    str = str + full0.join('');
+}
+
 // 1. 布尔值 
 var isDone = false;
 // 2.  数字 

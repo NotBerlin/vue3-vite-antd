@@ -1,3 +1,24 @@
+// 取近似值
+let num: number = parseFloat(32.721543)
+let floatNum: number = num - parseInt(num)
+if (floatNum >= 0.5) {
+  console.log(parseInt(num) + 1)
+} else {
+  console.log(parseInt(num))
+}
+
+// 输出8位字符串，不足补零
+let line: string | null = 'abc'
+if (line!.length == 0) {
+  console.log('00000000')
+}
+for (let i: number = 0; i < line!.length; i += 8) {
+  let str: string = line!.substr(i, 8)
+  let full0: Array<string> = new Array(8 - str.length).fill('0')
+  str = str + full0.join('')
+}
+
+
 // 1. 布尔值 
 let isDone: boolean = false;
 // 2.  数字 
@@ -23,15 +44,15 @@ let someValue: any = "this is a string";
 let strLength1: number = (<string>someValue).length;
 let strLength2: number = (someValue as string).length;
 // 12.  接口 
-interface LabelledValue { 
+interface LabelledValue {
   readonly label?: string;
-  [propName: string]: any 
+  [propName: string]: any
 }
 // 13.  只读数组 ReadonlyArray 只能在创建赋值，不可修改，不可赋值给其他类型数组
 // 14.  字符串索引[propName: string]: any;
 // 15.  接口修饰函数 
-interface SearchFunc { 
-  (source: string, subString: string): boolean; 
+interface SearchFunc {
+  (source: string, subString: string): boolean;
 }
 // 16.  实现接口
 // 17.  继承接口
