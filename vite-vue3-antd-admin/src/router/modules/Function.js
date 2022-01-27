@@ -23,4 +23,12 @@ export default [
     },
     component: () => import('../../view/Function/FaceRecognition/index.vue'),
   },
+  {
+    path: '/function/electronicSignature',
+    name: 'ElectronicSignature',
+    meta: {
+      title: '浏览器设备',
+    },
+    component: () => import('../../view/Function/ElectronicSignature/index.vue'),
+  },
 ]

@@ -130,6 +130,11 @@ export default [
         id: getUuid('FaceRecognition-'),
         path: '/function/faceRecognition'
       },
+      {
+        name: '电子签章',
+        id: getUuid('ElectronicSignature-'),
+        path: '/function/electronicSignature'
+      },
     ]
   },
   {
