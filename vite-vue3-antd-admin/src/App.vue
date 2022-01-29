@@ -8,6 +8,18 @@
 
 <script setup>
 console.log(import.meta.env)
+//监听刷新页面事件方法
+// window.addEventListener("beforeunload", function (event) {
+//   debugger
+//   return
+//   // event.returnValue = "我在这写点东西...";
+// });
+window.onbeforeunload = function (event) {
+  // 显示确认对话框
+  event.preventDefault();
+  // 为了兼容处理，Chrome需要设置returnValue
+  event.returnValue = '';
+};
 // This starter template is using Vue 3 experimental <script setup> SFCs
 // Check out https://github.com/vuejs/rfcs/blob/master/active-rfcs/0040-script-setup.md
 </script>

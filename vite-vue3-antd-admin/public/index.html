@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+
+</body>
+<script>
+  // console.log('213')
+  // // [1,2,3,4,5]
+  // // 分组
+  // let arr = [undefined, 2, 3, 4, 5]
+  // function chunk(arr, size) {
+  //   let length = arr.length, i = 0
+  //   let returnArr = []
+  //   while (i < length) {
+  //     let tempArr = []
+  //     for (let j = 0; j < size; j++) {
+  //       if (i + j < length) {
+  //         tempArr.push(arr[i + j])
+  //       }
+  //     }
+  //     returnArr.push(tempArr)
+  //     i = i + size
+  //   }
+  //   return returnArr
+  // }
+  // console.log(chunk(arr, 3)) //  [[1, 2], [3, 4], [5]]
+  // flat
+  let arr = [[1, 2], [3, 4], [{}, [1, 2]]]
+  function flat(arr) {
+    let returnArr = []
+    function iteration(a) {
+      a.forEach(item => {
+        if (item.constructor.name != 'Array') {
+          returnArr.push(item)
+        } else {
+          iteration(item)
+        }
+      })
+    }
+    iteration(arr)
+    return returnArr
+  }
+  console.log(flat(arr)) // [1,2,3,4,5,1,2]
+</script>
+
+</html>
