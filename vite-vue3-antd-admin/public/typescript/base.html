@@ -11,28 +11,30 @@
 <body>
   <div>123</div>
 </body>
-<script src="./modules/typescript.js">
+<!-- <script src="./modules/typescript.js">
+</script> -->
+<script src="./modules/typescript-test.js">
 </script>
 <script>
-  window.onload = function () {
-    window.addEventListener('message', function (e) {
-      if (e.source != window.parent)
-        return;
-      console.log(e.data); // 打印值
-    }, false);
-    window.parent.postMessage('要传入的值', '*'); // 将值传入父组件
-    var length = 10; function fn() {
-      console.log(this.length)
-    };
-    var obj = {
-      length: 5,
-      method: function (fn) {
-        fn()
-        arguments[0]()
-      }
-    }
-    obj.method(fn, 1)
-  }
+  // window.onload = function () {
+  //   window.addEventListener('message', function (e) {
+  //     if (e.source != window.parent)
+  //       return;
+  //     console.log(e.data); // 打印值
+  //   }, false);
+  //   window.parent.postMessage('要传入的值', '*'); // 将值传入父组件
+  //   var length = 10; function fn() {
+  //     console.log(this.length)
+  //   };
+  //   var obj = {
+  //     length: 5,
+  //     method: function (fn) {
+  //       fn()
+  //       arguments[0]()
+  //     }
+  //   }
+  //   obj.method(fn, 1)
+  // }
 </script>
 
 </html>

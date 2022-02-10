@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>test</title>
+  <style>
+    html,
+    body,
+    #container {
+      height: 100%;
+      width: 100%;
+      position: relative;
+    }
+
+    /* 1.	只使用 CSS 实现下图中的效果 */
+    .btn {
+      position: relative;
+      height: 30px;
+      width: 150px;
+      background: #59595950;
+      border-radius: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn::before {
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      content: '';
+      height: 30px;
+      width: 150px;
+      border-radius: 15px;
+      border: 1px solid #595959;
+      padding: 1px;
+    }
+
+    .btn-content {
+      border-radius: 14px;
+      height: 24px;
+      width: 140px;
+      border: 1px solid #59595910;
+      font-size: 14px;
+      line-height: 28px;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      box-shadow: 2px 2px 2px #59595930;
+      position: relative;
+    }
+
+    .btn-content::before {
+      position: absolute;
+      bottom: 0;
+      content: '';
+      height: 12px;
+      width: 140px;
+      background: #59595940;
+      /* border-top-left-radius: 14px;
+      border-top-right-radius: 14px; */
+      border-radius: 14px;
+    }
+
+    .btn-star-icon {
+      display: inline-block;
+      margin: 5px 0;
+      position: relative;
+      color: gray;
+      width: 0px;
+      height: 0px;
+      border-right: 10px solid transparent;
+      border-bottom: 7px solid gray;
+      border-left: 10px solid transparent;
+      -moz-transform: rotate(35deg) scale(0.7);
+      -webkit-transform: rotate(35deg) scale(0.7);
+      -ms-transform: rotate(35deg) scale(0.7);
+      -o-transform: rotate(35deg) scale(0.7);
+    }
+
+    .btn-star-icon:before {
+      border-bottom: 8px solid gray;
+      border-left: 3px solid transparent;
+      border-right: 3px solid transparent;
+      position: absolute;
+      height: 0;
+      width: 0;
+      top: -4.5px;
+      left: -6.5px;
+      display: block;
+      content: '';
+      -webkit-transform: rotate(-35deg);
+      -moz-transform: rotate(-35deg);
+      -ms-transform: rotate(-35deg);
+      -o-transform: rotate(-35deg);
+
+    }
+
+    .btn-star-icon:after {
+      position: absolute;
+      display: block;
+      color: gray;
+      top: 0.3px;
+      left: -10.5px;
+      width: 0px;
+      height: 0px;
+      border-right: 10px solid transparent;
+      border-bottom: 7px solid gray;
+      border-left: 10px solid transparent;
+      -webkit-transform: rotate(-70deg);
+      -moz-transform: rotate(-70deg);
+      -ms-transform: rotate(-70deg);
+      -o-transform: rotate(-70deg);
+      content: '';
+    }
+
+
+    /* 2.	编写代码实现以下要求：画一个矩形，拖拽矩形的4个角可以将矩形缩放（缩小到顶点时，顶点需固定），在矩形上按住拖动可以移动该矩形的位置。  */
+    #drag-box {
+      height: 100px;
+      width: 100px;
+      border: 1px solid black;
+      position: absolute;
+      cursor: move;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="container">
+    <!-- 1.	只使用 CSS 实现下图中的效果 -->
+    <h1>1. 只使用 CSS 实现下图中的效果</h1>
+    <div class="btn">
+      <div class="btn-content">
+        <div class="btn-star-icon"></div><strong>CHECKOUT</strong>
+        <div class="btn-star-icon"></div>
+      </div>
+    </div>
+    <!-- 2.	编写代码实现以下要求：画一个矩形，拖拽矩形的4个角可以将矩形缩放（缩小到顶点时，顶点需固定），在矩形上按住拖动可以移动该矩形的位置。 -->
+    <h2>2. 编写代码实现以下要求：画一个矩形，拖拽矩形的4个角可以将矩形缩放（缩小到顶点时，顶点需固定），在矩形上按住拖动可以移动该矩形的位置。</h1>
+      <div id="drag-box" draggable="false">
+        <div id="drag-top-left" draggable="false"></div>
+        <div id="drag-top-right" draggable="false"></div>
+        <div id="drag-bottom-left" draggable="false"></div>
+        <div id="drag-bottom-right" draggable="false"></div>
+      </div>
+  </div>
+</body>
+
+<script>
+  // 移动
+  function moveBox() {
+    console.log("开始移动");
+    var dragging = false;
+    var boxX, boxY, mouseX, mouseY, offsetX, offsetY;
+    var box = document.getElementById("drag-box");
+    var box1 = document.getElementById("container");
+    box.onmousedown = down;
+    document.onmousemove = move;
+    document.onmouseup = up;
+
+    function down(e) {
+      dragging = true;
+      boxX = box.offsetLeft;
+      boxY = box.offsetTop;
+      mouseX = parseInt(getMouseXY(e).x);
+      mouseY = parseInt(getMouseXY(e).y);
+      offsetX = mouseX - boxX;
+      offsetY = mouseY - boxY;
+    }
+
+    function move(e) {
+      if (dragging) {
+        var x = getMouseXY(e).x - offsetX;
+        var y = getMouseXY(e).y - offsetY;
+        console.log("移动");
+        console.log(x, y);
+        var width = box1.clientWidth - box.offsetWidth;
+        var height = box1.clientHeight - box.offsetHeight;
+        x = Math.min(Math.max(0, x), width);
+        y = Math.min(Math.max(0, y), height);
+        box.style.left = x + "px";
+        box.style.top = y + "px";
+      }
+    }
+
+    // 释放鼠标的函数
+    function up(e) {
+      if (dragging == false) return;
+      var x = getMouseXY(e).x - offsetX;
+      var y = getMouseXY(e).y - offsetY;
+      console.log("释放鼠标");
+      dragging = false;
+    }
+
+    // 函数用于获取鼠标的位置
+    function getMouseXY(e) {
+      var x = 0,
+        y = 0;
+      e = e || window.event;
+      if (e.pageX) {
+        x = e.pageX;
+        y = e.pageY;
+      } else {
+        x = e.clientX + document.body.scrollLeft - document.body.clientLeft;
+        y = e.clientY + document.body.scrollTop - document.body.clientTop;
+      }
+      return {
+        x: x,
+        y: y,
+      };
+    }
+  }
+
+  // 左上缩放
+  function topLeftScale () {
+    var dragging = false;
+    var boxX, boxY, mouseX, mouseY, offsetX, offsetY;
+    var box = document.getElementById("drag-top-left");
+    box.onmousedown = down;
+    document.onmousemove = move;
+    document.onmouseup = up;
+
+    function down(e) {
+      dragging = true;
+      mouseX = parseInt(getMouseXY(e).x);
+      mouseY = parseInt(getMouseXY(e).y);
+      offsetX = mouseX - boxX;
+      offsetY = mouseY - boxY;
+    }
+
+    function move(e) {
+      if (dragging) {
+        var x = getMouseXY(e).x - offsetX;
+        var y = getMouseXY(e).y - offsetY;
+        console.log("移动");
+        console.log(x, y);
+        var width = box1.clientWidth - box.offsetWidth;
+        var height = box1.clientHeight - box.offsetHeight;
+        x = Math.min(Math.max(0, x), width);
+        y = Math.min(Math.max(0, y), height);
+        box.style.left = x + "px";
+        box.style.top = y + "px";
+      }
+    }
+
+    // 释放鼠标的函数
+    function up(e) {
+      if (dragging == false) return;
+      var x = getMouseXY(e).x - offsetX;
+      var y = getMouseXY(e).y - offsetY;
+      console.log("释放鼠标");
+      dragging = false;
+    }
+
+    // 函数用于获取鼠标的位置
+    function getMouseXY(e) {
+      var x = 0,
+        y = 0;
+      e = e || window.event;
+      if (e.pageX) {
+        x = e.pageX;
+        y = e.pageY;
+      } else {
+        x = e.clientX + document.body.scrollLeft - document.body.clientLeft;
+        y = e.clientY + document.body.scrollTop - document.body.clientTop;
+      }
+      return {
+        x: x,
+        y: y,
+      };
+    }
+  }
+
+  // 右上缩放
+  function topRightScale() {
+  }
+
+  // 左下缩放
+  function BottomLeftScale() { } 
+
+  // 右下缩放
+  function BottomRightScale() { }
+
+  setTimeout(function () {
+    moveBox();
+    topLeftScale();
+  }, 10);
+</script>
+
+</html>
